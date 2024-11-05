@@ -20,15 +20,19 @@ import {
   Row,
   Col,
   UncontrolledTooltip,
+  Breadcrumb,
+  BreadcrumbItem,
 } from "reactstrap";
 
 // core components
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 
 const Batch = () => {
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
@@ -41,13 +45,20 @@ const Batch = () => {
     }
   };
 
+  const onViewDetailHandler =(id)=>{
+    navigate(`/admin/batch-detail/${id}`)
+  }
+
   useEffect(() => {  
     fetchData();
   }, []);
 
   return (
     <>
-      <div className="content">        
+      <div className="content">      
+        <Breadcrumb>
+          <BreadcrumbItem active>Batch</BreadcrumbItem>
+        </Breadcrumb>  
         <Row>          
           <Col >
             <Card>
@@ -77,7 +88,7 @@ const Batch = () => {
                       <td>{x.created_date}</td>                     
                       <td>{x.modified_date}</td>  
                       <td >
-                        <Button color="info" size="sm">View Details</Button>
+                        <Button  color="info" onClick={()=>onViewDetailHandler(x.id)} size="sm">View Details</Button>
                       </td>
                     </tr>
                     })}                  

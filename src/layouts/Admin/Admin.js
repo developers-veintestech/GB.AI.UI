@@ -179,8 +179,8 @@ const Admin = (props) => {
         routes={routes}
         activeColor={activeColor}
         logo={{
-          outterLink: "https://www.creative-tim.com/",
-          text: "Creative Tim",
+          outterLink: "",
+          text: "Document Manager",
           imgSrc: logo,
         }}
         closeSidebar={closeSidebar}
@@ -189,7 +189,7 @@ const Admin = (props) => {
         <AdminNavbar
           {...props}
           handleMiniClick={handleMiniClick}
-          brandText={getActiveRoute(routes)}
+          brandText={'GB AI Doc'}
           sidebarOpened={sidebarOpened}
           toggleSidebar={toggleSidebar}
         />
