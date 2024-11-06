@@ -128,7 +128,7 @@ const AdminNavbar = (props) => {
             <span className="navbar-toggler-bar navbar-kebab" />
             <span className="navbar-toggler-bar navbar-kebab" />
           </button>
-          <Collapse navbar isOpen={collapseOpen}>
+          {/* <Collapse navbar isOpen={collapseOpen}>
             <Nav className="ml-auto" navbar>
               <InputGroup className="search-bar" tag="li">
                 <Button
@@ -210,7 +210,7 @@ const AdminNavbar = (props) => {
               </UncontrolledDropdown>
               <li className="separator d-lg-none" />
             </Nav>
-          </Collapse>
+          </Collapse> */}
         </Container>
       </Navbar>
       <Modal

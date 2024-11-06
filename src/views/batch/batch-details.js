@@ -26,6 +26,7 @@ import {
 
 // core components
 import axios from "axios";
+import { NavLink } from "react-router-dom";
 
 
 const BatchDetail = () => {
@@ -51,7 +52,7 @@ const BatchDetail = () => {
     <>
       <div className="content">      
         <Breadcrumb>
-          <BreadcrumbItem><a href="#">Batch List</a></BreadcrumbItem>
+          <BreadcrumbItem><NavLink to={'/admin/batch'}> Batch List </NavLink></BreadcrumbItem>
           <BreadcrumbItem active>Batch Details</BreadcrumbItem>
         </Breadcrumb>  
         <Row>          

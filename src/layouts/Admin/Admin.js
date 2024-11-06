@@ -174,7 +174,7 @@ const Admin = (props) => {
           <i className="tim-icons icon-bullet-list-67 visible-on-sidebar-mini text-muted" />
         </button>
       </div>
-      <Sidebar
+      {/* <Sidebar
         {...props}
         routes={routes}
         activeColor={activeColor}
@@ -184,12 +184,12 @@ const Admin = (props) => {
           imgSrc: logo,
         }}
         closeSidebar={closeSidebar}
-      />
+      /> */}
       <div className="main-panel" ref={mainPanelRef} data={activeColor}>
         <AdminNavbar
           {...props}
           handleMiniClick={handleMiniClick}
-          brandText={'GB AI Doc'}
+          brandText={'GB AI Doc Manager'}
           sidebarOpened={sidebarOpened}
           toggleSidebar={toggleSidebar}
         />
