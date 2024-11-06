@@ -26,16 +26,19 @@ import {
 
 // core components
 import axios from "axios";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
+import DocumentBatchViewer from "./document-batch-viewer";
 
 
 const BatchDetail = () => {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState(null);
   const [error, setError] = useState(null);
 
-  const fetchData = async () => {
+  const { id } = useParams();
+
+  const fetchData = async (id) => {
     try {
-      const response = await axios.get('https://localhost:7125/api/batch/List');
+      const response = await axios.get(`https://localhost:7125/api/batch/${id}`);
       setData(response.data);
     } catch (error) {
       setError(error.message);
@@ -44,9 +47,12 @@ const BatchDetail = () => {
     }
   };
 
-  useEffect(() => {  
-    fetchData();
-  }, []);
+  useEffect(() => { 
+    if(id){
+      fetchData(id);
+    } 
+    
+  }, [id]);
 
   return (
     <>
@@ -59,10 +65,10 @@ const BatchDetail = () => {
           <Col>
             <Card>
               <CardHeader>                
-                <CardTitle tag="h5">Batch List</CardTitle>
+                <CardTitle tag="h4">Batch Details</CardTitle>
               </CardHeader>
               <CardBody>
-                
+                  {data && <DocumentBatchViewer batchData={data} /> }
               </CardBody>
             </Card>
           </Col>         

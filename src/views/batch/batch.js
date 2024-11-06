@@ -116,7 +116,7 @@ const Batch = () => {
           <Col>
             <Card className="upload-card">
             <CardHeader>
-                <CardTitle tag="h5">Upload Batch</CardTitle>
+                <CardTitle tag="h4">Upload Batch</CardTitle>
               </CardHeader>
               <CardBody
                 onDrop={handleDrop}
@@ -163,13 +163,13 @@ const Batch = () => {
           <Col>
             <Card>
               <CardHeader>
-                <CardTitle tag="h5">Batch Details</CardTitle>
+                <CardTitle tag="h4">Batch List</CardTitle>
               </CardHeader>              
               <CardBody>
                 <Table responsive>
                   <thead className="text-primary">
                     <tr>
-                      <th className="text-center">#</th>
+                      {/* <th className="text-center">#</th> */}
                       <th>Batch Id</th>
                       <th>Status</th>
                       <th>Created Date</th>
@@ -180,7 +180,7 @@ const Batch = () => {
                   <tbody>
                     {data.map((x, i) => (
                       <tr key={x.id}>
-                        <td className="text-center">{i + 1}</td>
+                        {/* <td className="text-center">{i + 1}</td> */}
                         <td>{x.id}</td>
                         <td>{x.status}</td>
                         <td>{x.created_date}</td>
