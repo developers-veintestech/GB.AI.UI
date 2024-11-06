@@ -18,3 +18,32 @@
   .icon-container {
     margin-bottom: 10px;
   }
+
+  .spinner-border {
+    margin-right: 5px;
+    color: white;
+  }
+
+  .loader{
+    display: flex;
+  }
+
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .custom-small-btn {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+  
+  
