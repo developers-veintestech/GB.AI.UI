@@ -33,6 +33,7 @@ import DocumentBatchViewer from "./document-batch-viewer";
 const BatchDetail = () => {
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
+  const [refresh, setRefresh] = useState(false);
 
   const { id } = useParams();
 
@@ -50,9 +51,8 @@ const BatchDetail = () => {
   useEffect(() => { 
     if(id){
       fetchData(id);
-    } 
-    
-  }, [id]);
+    }
+  }, [id, refresh]);
 
   return (
     <>
@@ -68,7 +68,7 @@ const BatchDetail = () => {
                 <CardTitle tag="h4">Batch Details</CardTitle>
               </CardHeader>
               <CardBody>
-                  {data && <DocumentBatchViewer batchData={data} /> }
+                  {data && <DocumentBatchViewer batchData={data} refresh={setRefresh}/> }
               </CardBody>
             </Card>
           </Col>         

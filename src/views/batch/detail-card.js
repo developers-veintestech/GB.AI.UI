@@ -30,7 +30,9 @@ import {
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 
-const DetailCard = ({ detail }) => (
+const DetailCard = ({ detail }) =>{
+  console.log('detail', detail)
+  return (
   <Card className="mb-2 border-light">
     <CardBody className="p-2">
       {/* <CardTitle tag="h6">{detail.name}</CardTitle> */}
@@ -44,6 +46,6 @@ const DetailCard = ({ detail }) => (
         </Button>
       </div>
     </CardBody>
-  </Card>);
+  </Card>)};
 
 export default DetailCard;
