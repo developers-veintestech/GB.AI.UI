@@ -84,7 +84,7 @@ const DocumentBatchViewer = ({ batchData, refresh }) => {
       </div>
 
       {batchData.documents.map((doc) => (
-        <DocumentCard key={doc.id} documents={doc} />
+        <DocumentCard batchId={batchData.id} key={doc.id} documents={doc} />
       ))}
     </div>
   );

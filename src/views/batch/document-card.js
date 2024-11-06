@@ -31,7 +31,7 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import DetailCard from "./detail-card";
 
-const DocumentCard = ({ documents }) => {
+const DocumentCard = ({ batchId, documents }) => {
   console.log('document', document)
   const [isOpen, setIsOpen] = useState(true);
   const [isDownloading, setIsDownloading] = useState(false);
@@ -39,7 +39,7 @@ const DocumentCard = ({ documents }) => {
     try {
       setIsDownloading(true); 
 
-      const response = await axios.get(`https://localhost:7125/api/batch/download/${documentId}`, {
+      const response = await axios.get(`https://localhost:7125/api/batch/${batchId}/document/${documentId}/download`, {
         responseType: "blob", 
       });
 
@@ -95,7 +95,7 @@ const DocumentCard = ({ documents }) => {
         <Collapse isOpen={isOpen}>
           <div className="mt-3">
             {documents.details.map((detail) => (
-              <DetailCard key={detail.id} detail={detail} />
+              <DetailCard key={detail.id} detail={detail} batchId={batchId} />
             ))}
           </div>
         </Collapse>
