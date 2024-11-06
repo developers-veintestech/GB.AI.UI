@@ -31,20 +31,51 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import DetailCard from "./detail-card";
 
-const DocumentCard = ({ document }) => {
+const DocumentCard = ({ documents }) => {
+  console.log('document', document)
   const [isOpen, setIsOpen] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const handleDownload = async (documentId) => {
+    try {
+      setIsDownloading(true); 
+
+      const response = await axios.get(`https://localhost:7125/api/batch/download/${documentId}`, {
+        responseType: "blob", 
+      });
+
+      const fileURL = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+
+     
+      const filename = response.headers['content-disposition']?.split('filename=')[1]?.replace(/"/g, '');
+      if (filename) {
+        link.setAttribute('download', filename); 
+      } else {
+        link.setAttribute('download', `document_${documentId}.pdf`); 
+      }
+
+      link.href = fileURL;
+      document.body.appendChild(link);
+      link.click();
+      link.remove(); 
+    } catch (error) {
+      console.error("Error downloading the file:", error.response || error);
+    } finally {
+      setIsDownloading(false); 
+    }
+  };
 
   const toggle = () => setIsOpen(!isOpen);
 
   return (
     <Card className="mb-3 shadow-sm">
       <CardBody>
-        <CardTitle tag="h5">{document.name}</CardTitle>
-        <CardText>Status: {document.status}</CardText>
+        <CardTitle tag="h5">{documents.name}</CardTitle>
+        <CardText>Status: {documents.status}</CardText>
         <div className="d-flex justify-content-start">
           <Button
             color="primary"
-            href={document.path}
+            href={documents.path}
             target="_blank"
             className="mr-2"
           >
@@ -52,10 +83,10 @@ const DocumentCard = ({ document }) => {
           </Button>
           <Button
             color="secondary"
-            href={document.path}
-            download
+            onClick={() => handleDownload(documents.id)} // Trigger the API call on click
+            disabled={isDownloading} // Disable button during download
           >
-            Download
+            {isDownloading ? "Downloading..." : "Download"}
           </Button>
         </div>
         <Button color="link" className="mt-2" onClick={toggle}>
@@ -63,7 +94,7 @@ const DocumentCard = ({ document }) => {
         </Button>
         <Collapse isOpen={isOpen}>
           <div className="mt-3">
-            {document.details.map((detail) => (
+            {documents.details.map((detail) => (
               <DetailCard key={detail.id} detail={detail} />
             ))}
           </div>

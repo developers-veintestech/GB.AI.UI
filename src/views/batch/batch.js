@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import './batch.scss'; // Assuming you have a CSS file for additional styles
+import { DateTimeFormatter } from "components/Shared/DateTimeFormatter";
 
 const Batch = () => {
   const [data, setData] = useState([]);
@@ -183,8 +184,8 @@ const Batch = () => {
                         {/* <td className="text-center">{i + 1}</td> */}
                         <td>{x.id}</td>
                         <td>{x.status}</td>
-                        <td>{x.created_date}</td>
-                        <td>{x.modified_date}</td>
+                        <td>{DateTimeFormatter(x.created_date)}</td>
+                        <td>{DateTimeFormatter(x.modified_date)}</td>
                         <td>
                           {x.status === "Pending" ? (
                             <Button color="secondary" size="sm" onClick={() => handleProcessNow(x.id)}>
