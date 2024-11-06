@@ -30,44 +30,62 @@ import {
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import DetailCard from "./detail-card";
+import './batch.scss'; // Assuming you have a CSS file for additional styles
 
 const DocumentCard = ({ document }) => {
   const [isOpen, setIsOpen] = useState(true);
 
   const toggle = () => setIsOpen(!isOpen);
+  const columnsPerRow = 3;
+
+  // Function to split items into rows
+  const splitIntoRows = (array, columns) => {
+    const rows = [];
+    for (let i = 0; i < array.length; i += columns) {
+      rows.push(array.slice(i, i + columns));
+    }
+    return rows;
+  };
+  const rows = splitIntoRows(document.details, columnsPerRow);
 
   return (
-    <Card className="mb-3 shadow-sm">
+    <Card className="mb-3 card-shadow">
       <CardBody>
-        <CardTitle tag="h5">{document.name}</CardTitle>
-        <CardText>Status: {document.status}</CardText>
-        <div className="d-flex justify-content-start">
-          <Button
+        <Row>
+        <Col className="ml-2 mb-2">
+        <CardText><strong>Document Name: </strong>{document.name}</CardText>
+        </Col>
+        <Col className="ml-9 mr-5">
+        <CardText><strong>Status: </strong>{document.status}
+        <Button
             color="primary"
             href={document.path}
             target="_blank"
-            className="mr-2"
+            className="mr-2 ml-2"
+            size="sm"
           >
             View
-          </Button>
-          <Button
-            color="secondary"
-            href={document.path}
-            download
-          >
-            Download
-          </Button>
-        </div>
-        <Button color="link" className="mt-2" onClick={toggle}>
-          {isOpen ? "Hide Details" : "Show Details"}
-        </Button>
+          </Button></CardText>
+        
+        </Col>
+        </Row>
+        <Card color="link" className="mt-2 card-shadow" onClick={toggle}>
+          <CardHeader>  {isOpen ? "Hide Details" : "Show Details"}</CardHeader>
+        <CardBody>
         <Collapse isOpen={isOpen}>
-          <div className="mt-3">
-            {document.details.map((detail) => (
-              <DetailCard key={detail.id} detail={detail} />
-            ))}
-          </div>
+              {rows.map((row, rowIndex) => (
+                <Row key={rowIndex} className="mb-3">
+                  {row.map((item, colIndex) => (
+                    <Col key={colIndex} md={4}>
+                      <DetailCard key={item.id} detail={item} />
+                    </Col>
+                  ))}
+                </Row>
+              ))}
         </Collapse>
+        </CardBody>
+        </Card>
+       
       </CardBody>
     </Card>
   );

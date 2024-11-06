@@ -31,18 +31,13 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 
 const DetailCard = ({ detail }) => (
-  <Card className="mb-2 border-light">
+  <Card className="mb-1 border-light">
     <CardBody className="p-2">
       {/* <CardTitle tag="h6">{detail.name}</CardTitle> */}
-      <CardText><small>Category: {detail.category}</small></CardText>
-      <div className="d-flex justify-content-start">
-        <Button color="info" href={detail.path} target="_blank" className="mr-2">
+      <CardText><small><strong>Category:</strong> {detail.category}</small>
+        <Button color="info" size="sm" href={detail.path} target="_blank" className="mr-2 ml-2">
           View
-        </Button>
-        <Button color="success" href={detail.path} download>
-          Download
-        </Button>
-      </div>
+        </Button></CardText>
     </CardBody>
   </Card>);
 
