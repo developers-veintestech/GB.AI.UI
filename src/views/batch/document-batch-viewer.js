@@ -31,8 +31,7 @@ import DocumentCard from "./document-card";
 
 const DocumentBatchViewer = ({batchData}) => {
   return (
-    <div className="container my-4">
-      <h2 className="text-center">Batch Details</h2>
+    <div className="container my-4">  
       <div className="mb-4">
         <p><strong>Batch ID:</strong> {batchData.id}</p>
         <p><strong>Status:</strong> {batchData.status}</p>
