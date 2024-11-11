@@ -113,12 +113,12 @@ const Batch = () => {
           <Col>
             <Card className="upload-card">
               <CardHeader>
-                <CardTitle tag="h5">Upload Batch</CardTitle>
+                <CardTitle tag="h4">Batch Upload</CardTitle>
               </CardHeader>
               <CardBody
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
-                className="m-3 drop-area"
+                className="m-4 drop-area"
               >
                 <div className="icon-container">
                   <AiOutlineCloudUpload size={50} color="#007bff" />
@@ -180,7 +180,7 @@ const Batch = () => {
           <Col>
             <Card>
               <CardHeader>
-                <CardTitle tag="h5">Batch Details</CardTitle>
+                <CardTitle tag="h4">Batch List</CardTitle>
               </CardHeader>
               <CardBody>
                 <Table responsive>
