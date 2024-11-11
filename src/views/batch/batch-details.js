@@ -27,7 +27,8 @@ import {
 // core components
 import axios from "axios";
 import { NavLink, useParams } from "react-router-dom";
-import DocumentBatchViewer from "./document-batch-viewer";
+import './batch.scss'; 
+import DocumentViewer from "./document-viewer";
 
 
 const BatchDetail = () => {
@@ -61,18 +62,19 @@ const BatchDetail = () => {
           <BreadcrumbItem><NavLink to={'/admin/batch'}> Batch List </NavLink></BreadcrumbItem>
           <BreadcrumbItem active>Batch Details</BreadcrumbItem>
         </Breadcrumb>  
-        <Row>          
+        <Row> 
           <Col>
             <Card>
               <CardHeader>                
                 <CardTitle tag="h4">Batch Details</CardTitle>
               </CardHeader>
               <CardBody>
-                  {data && <DocumentBatchViewer batchData={data} /> }
+              {data && <DocumentViewer batchData={data} ></DocumentViewer>}
               </CardBody>
             </Card>
           </Col>         
         </Row>
+       
       </div>
     </>
   );
