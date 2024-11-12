@@ -2,24 +2,23 @@ import React, { useState, useEffect } from 'react';
 import './batch.scss';
 import axios from "axios";
 import { Card, CardBody } from 'reactstrap';
+import { getFileData } from 'services/document';
 
-const DocumentViewer = (data) => {
-    const batchData = data.batchData;
-
+const DocumentViewer = ({batchData}) => {
     // Initialize state to track active tabs for each section
     const [activeTabs, setActiveTabs] = useState({});
     const [selectedItem, setSelectedItem] = useState(batchData.documents[0]);
     const [fileUrl, setFileUrl] = useState({});
 
     // Function to handle tab clicks and update the state for each section
-    const handleTabClick = (sectionId, tab) => {
+    const handleTabClick = (sectionId, tab, batchId) => {
         setActiveTabs(prevTabs => ({
             ...prevTabs,
             [sectionId]: tab
         }));
 
-        if (tab === 'Documents' && activeTabs[sectionId] === undefined) {
-            onSplitDownloadHandler(selectedItem.id, sectionId)
+        if (tab === 'Documents') {
+            onSplitDownloadHandler(batchId, selectedItem.id, sectionId)
         }
     };
 
@@ -27,12 +26,9 @@ const DocumentViewer = (data) => {
         setSelectedItem(item);
     };
 
-    const onSplitDownloadHandler = async (documentId, splitDocumentId) => {
-        const response = await axios.get(`https://localhost:7125/api/batch/${9}/document/${documentId}/split/${splitDocumentId}/download`, {
-            responseType: "blob",
-        });
-
-        const blob = new Blob([response.data], { type: 'application/pdf' });
+    const onSplitDownloadHandler = async (batchId, documentId, splitDocumentId) => {
+        const response = await getFileData(batchId, documentId, splitDocumentId); 
+        const blob = new Blob([response.receiveObj], { type: 'application/pdf' });
         const url = URL.createObjectURL(blob);
         setFileUrl(prevUrl => ({
             ...prevUrl,
@@ -64,6 +60,7 @@ const DocumentViewer = (data) => {
                                 onTabClick={handleTabClick}
                                 selectedItem={selectedItem}
                                 fileURL={fileUrl}
+                                batchId = {batchData.id}
                             />
                         </Card>
                     })}
@@ -73,7 +70,7 @@ const DocumentViewer = (data) => {
     );
 }
 
-const Section = ({ id, title, activeTab, onTabClick, selectedItem, fileURL }) => {
+const Section = ({ id, title, activeTab, onTabClick, selectedItem, fileURL, batchId}) => {
     return (
         <CardBody>
             <h2>{title}</h2>
@@ -85,7 +82,7 @@ const Section = ({ id, title, activeTab, onTabClick, selectedItem, fileURL }) =>
                 </button>
                 <button
                     className={activeTab === 'Documents' ? 'active' : ''}
-                    onClick={() => onTabClick(id, 'Documents', selectedItem)}>
+                    onClick={() => onTabClick(id, 'Documents', batchId, selectedItem)}>
                     Documents
                 </button>
             </div>

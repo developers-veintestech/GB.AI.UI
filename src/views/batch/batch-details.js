@@ -70,7 +70,8 @@ const BatchDetail = () => {
                 <CardTitle tag="h4">Batch Details</CardTitle>
               </CardHeader>
               <CardBody>
-                  {data && <DocumentBatchViewer batchData={data} refresh={setRefresh}/> }
+                  {/* {data && <DocumentBatchViewer batchData={data} refresh={setRefresh}/> } */}
+                  {data && <DocumentViewer batchData={data}/> }
               </CardBody>
             </Card>
           </Col>         
