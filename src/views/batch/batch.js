@@ -8,37 +8,36 @@ import {
   Table,
   Row,
   Col,
-  Dropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
-import { AiOutlineCloudUpload } from 'react-icons/ai';
+import { AiOutlineCloudUpload } from "react-icons/ai";
 import './batch.scss'; // Assuming you have a CSS file for additional styles
+import { DateTimeFormatter } from "components/Shared/DateTimeFormatter";
+import { getBatchList } from "services/document";
 
 const Batch = () => {
   const [data, setData] = useState([]);
   const [files, setFiles] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const notificationAlertRef = useRef(null);
   const navigate = useNavigate();
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("https://localhost:7125/api/batch/List");
-      setData(response.data);
+      const response = await getBatchList();
+      setData(response.receiveObj);
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
   };
 
-  const onViewDetailHandler =(id) => {
+  const onViewDetailHandler = (id) => {
     navigate(`/admin/batch-detail/${id}`);
   };
 
-  useEffect(() => {  
+  useEffect(() => {
     fetchData();
   }, []);
 
@@ -58,48 +57,47 @@ const Batch = () => {
   };
 
   const handleUpload = async () => {
-    const formData = new FormData();
-    if (files.length > 0) {
-      files.forEach((file) => {
-        formData.append("files", file);
-      });
-    } else {
+    if (files.length === 0) {
       alert("Please select files to upload.");
       return;
     }
 
+    const formData = new FormData();
+    files.forEach((file) => {
+      formData.append("files", file);
+    });
+
+    setIsLoading(true);
     try {
-      const response = await axios.post("https://localhost:7125/api/batch/documents/upload", formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Upload successful:', response.data);
+      const response = await axios.post(
+        "https://localhost:44380/api/batch/documents/upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      const newBatchId = response.data;
       fetchData();
       notify("Files uploaded successfully!", "success");
-      setFiles([]); // Clear files after successful upload
+
+      setFiles([]);
+      setIsLoading(false);
+      
+      navigate(`/admin/batch-detail/${newBatchId}`);
     } catch (error) {
-      console.error('Upload failed:', error);
-      notify("Upload failed! Please try again.", "danger"); 
+      console.error("Upload failed:", error);
+      notify("Upload failed! Please try again.", "danger");
+    } finally {
+      setIsLoading(false);
     }
   };
-
-  const handleProcessNow = async (batchId) => {
-    try {
-      const response = await axios.post(`https://localhost:7125/api/batch/${batchId}/process`);
-      console.log('Processing successful:', response);
-      notify("Batch processed successfully!", "success");
-      fetchData();
-    } catch (error) {
-      console.error('Processing failed:', error);
-      notify("Processing failed! Please try again.", "danger");
-    }
-  };
-
 
   const notify = (message, type) => {
     const options = {
-      place: "tr", 
+      place: "tr",
       message: <div>{message}</div>,
       type: type,
       autoDismiss: 7,
@@ -110,31 +108,34 @@ const Batch = () => {
   return (
     <>
       <NotificationAlert ref={notificationAlertRef} />
-      <div className="content">       
+      <div className="content">
         {/* Drag-and-Drop Upload Card */}
         <Row>
           <Col>
             <Card className="upload-card">
-            <CardHeader>
-                <CardTitle tag="h4">Upload Batch</CardTitle>
+              <CardHeader>
+                <CardTitle tag="h4">Batch Upload</CardTitle>
               </CardHeader>
               <CardBody
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
-                className="m-3 drop-area"
+                className="m-4 drop-area"
               >
                 <div className="icon-container">
                   <AiOutlineCloudUpload size={50} color="#007bff" />
                 </div>
                 <p>Drag & drop files here</p>
                 <p>or</p>
-                <Button color="info" onClick={() => document.getElementById('fileInput').click()}>
+                <Button
+                  color="info"
+                  onClick={() => document.getElementById("fileInput").click()}
+                >
                   Select Files
                 </Button>
                 <input
                   type="file"
                   id="fileInput"
-                  style={{ display: 'none' }}
+                  style={{ display: "none" }}
                   multiple
                   onChange={handleFileChange}
                 />
@@ -149,8 +150,25 @@ const Batch = () => {
                       <li key={index}>{file.name}</li>
                     ))}
                   </ul>
-                  <Button color="primary" onClick={handleUpload}>
-                    Upload
+                  <Button
+                    color="primary"
+                    onClick={handleUpload}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <>
+                        <div className="loader">
+                          <span
+                            className="spinner-border spinner-border-sm"
+                            role="status"
+                            aria-hidden="true"
+                          ></span>
+                          <span>Uploading..</span>
+                        </div>
+                      </>
+                    ) : (
+                      "Upload"
+                    )}
                   </Button>
                 </CardBody>
               )}
@@ -164,12 +182,12 @@ const Batch = () => {
             <Card>
               <CardHeader>
                 <CardTitle tag="h4">Batch List</CardTitle>
-              </CardHeader>              
+              </CardHeader>
               <CardBody>
                 <Table responsive>
                   <thead className="text-primary">
                     <tr>
-                      {/* <th className="text-center">#</th> */}
+                      <th className="text-center">#</th>
                       <th>Batch Id</th>
                       <th>Status</th>
                       <th>Created Date</th>
@@ -180,21 +198,19 @@ const Batch = () => {
                   <tbody>
                     {data.map((x, i) => (
                       <tr key={x.id}>
-                        {/* <td className="text-center">{i + 1}</td> */}
+                        <td className="text-center">{i + 1}</td>
                         <td>{x.id}</td>
                         <td>{x.status}</td>
-                        <td>{x.created_date}</td>
-                        <td>{x.modified_date}</td>
+                        <td>{DateTimeFormatter(x.created_date)}</td>
+                        <td>{DateTimeFormatter(x.modified_date)}</td>
                         <td>
-                          {x.status === "Pending" ? (
-                            <Button color="secondary" size="sm" onClick={() => handleProcessNow(x.id)}>
-                              Process Now
-                            </Button>
-                          ) : (
-                            <Button color="info" size="sm" onClick={() => onViewDetailHandler(x.id)}>
-                              View Details
-                            </Button>
-                          )}
+                          <Button
+                            color="info"
+                            size="sm"
+                            onClick={() => onViewDetailHandler(x.id)}
+                          >
+                            View Details
+                          </Button>
                         </td>
                       </tr>
                     ))}

@@ -32,11 +32,13 @@ import { NavLink } from "react-router-dom";
 import DetailCard from "./detail-card";
 import './batch.scss'; // Assuming you have a CSS file for additional styles
 
-const DocumentCard = ({ document }) => {
+const DocumentCard = ({onDocumentDownloadHandler, onSplitDownloadHandler, document, index }) => {  
   const [isOpen, setIsOpen] = useState(true);
+  const [isDownloading, setIsDownloading] = useState(false);
+ 
 
   const toggle = () => setIsOpen(!isOpen);
-  const columnsPerRow = 3;
+  const columnsPerRow = 4;
 
   // Function to split items into rows
   const splitIntoRows = (array, columns) => {
@@ -50,41 +52,48 @@ const DocumentCard = ({ document }) => {
 
   return (
     <Card className="mb-3 card-shadow">
-      <CardBody>
+        <CardHeader>
+          <CardTitle tag="h4">Document  {index+1}</CardTitle>
+        </CardHeader>
+      <CardBody className="pt-0">        
         <Row>
-        <Col className="ml-2 mb-2">
-        <CardText><strong>Document Name: </strong>{document.name}</CardText>
-        </Col>
-        <Col className="ml-9 mr-5">
-        <CardText><strong>Status: </strong>{document.status}
-        <Button
-            color="primary"
-            href={document.path}
-            target="_blank"
-            className="mr-2 ml-2"
-            size="sm"
-          >
-            View
-          </Button></CardText>
-        
-        </Col>
+          <Col sm={12} className="d-flex">
+            <CardText className="mt-2"><strong>Document Name: </strong>{document.name}</CardText>
+            <Button
+                  color="info"
+                  onClick={()=>onDocumentDownloadHandler(document.id)}
+                  target="_blank"
+                  className="mr-2 ml-2"
+                  size="sm"
+                >
+                  Download
+                </Button>
+          </Col>
+          <Col sm={12} className="mb-2">
+            <CardText><strong>Status: </strong>{document.status}
+             
+            </CardText>        
+           </Col>
         </Row>
-        <Card color="link" className="mt-2 card-shadow" onClick={toggle}>
-          <CardHeader>  {isOpen ? "Hide Details" : "Show Details"}</CardHeader>
-        <CardBody>
-        <Collapse isOpen={isOpen}>
-              {rows.map((row, rowIndex) => (
-                <Row key={rowIndex} className="mb-3">
-                  {row.map((item, colIndex) => (
-                    <Col key={colIndex} md={4}>
-                      <DetailCard key={item.id} detail={item} />
-                    </Col>
-                  ))}
-                </Row>
-              ))}
-        </Collapse>
-        </CardBody>
+        {document.status === 'Processed' &&
+          <Card color="link" className="mt-2 card-shadow">     
+          <CardHeader>
+            <CardTitle tag="h4">Split Documents</CardTitle>
+          </CardHeader>     
+          <CardBody >
+            {rows.map((row, rowIndex) => (
+                  <Row key={rowIndex} className="mb-1">
+                    {row.map((item, colIndex) => (
+                      <Col key={colIndex} md={3}>
+                            <DetailCard key={item.id} detail={item} documentId={document.id} onSplitDownloadHandler={onSplitDownloadHandler} />
+                      </Col>
+                    ))}
+                  </Row>
+                ))}
+          </CardBody>
         </Card>
+        }
+        
        
       </CardBody>
     </Card>

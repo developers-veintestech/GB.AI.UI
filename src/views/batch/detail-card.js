@@ -30,12 +30,12 @@ import {
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 
-const DetailCard = ({ detail }) => (
+const DetailCard = ({onSplitDownloadHandler, detail,documentId }) => (
   <Card className="mb-1 border-light">
-    <CardBody className="p-2">
+    <CardBody className="p-1">
       {/* <CardTitle tag="h6">{detail.name}</CardTitle> */}
       <CardText><small><strong>Category:</strong> {detail.category}</small>
-        <Button color="info" size="sm" href={detail.path} target="_blank" className="mr-2 ml-2">
+        <Button color="info" size="sm" onClick={()=>onSplitDownloadHandler(documentId, detail.id)} className="mr-2 ml-2">
           View
         </Button></CardText>
     </CardBody>
