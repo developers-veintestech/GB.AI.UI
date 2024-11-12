@@ -15,6 +15,7 @@ import NotificationAlert from "react-notification-alert";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import './batch.scss'; // Assuming you have a CSS file for additional styles
 import { DateTimeFormatter } from "components/Shared/DateTimeFormatter";
+import { getBatchList } from "services/document";
 
 const Batch = () => {
   const [data, setData] = useState([]);
@@ -25,8 +26,8 @@ const Batch = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("https://localhost:7125/api/batch/List");
-      setData(response.data);
+      const response = await getBatchList();
+      setData(response.receiveObj);
     } catch (error) {
       console.error("Error fetching data:", error.message);
     }
@@ -69,7 +70,7 @@ const Batch = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        "https://localhost:7125/api/batch/documents/upload",
+        "https://localhost:44380/api/batch/documents/upload",
         formData,
         {
           headers: {

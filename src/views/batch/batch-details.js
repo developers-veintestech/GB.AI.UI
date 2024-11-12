@@ -39,7 +39,7 @@ const BatchDetail = () => {
 
   const fetchData = async (id) => {
     try {
-      const response = await axios.get(`https://localhost:7125/api/batch/${id}`);
+      const response = await axios.get(`https://localhost:44380/api/batch/${id}`);
       setData(response.data);
     } catch (error) {
       setError(error.message);
