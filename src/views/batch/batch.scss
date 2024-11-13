@@ -299,13 +299,19 @@ button {
   opacity: 1;
 }
 
-.field-table{
-  width: 100%;
-  border-collapse: 'collapse'; 
-  margin-top: '2px'
+.category-tab{
+.nav-link{
+  padding: 7px !important;
+}
 }
 
-.field-table-tr{
-   padding: 8px;
-    border: 1px solid rgb(221, 221, 221);
+.table-responsive{
+  overflow: hidden;
 }
+
+.tab-content-height{ 
+   height: 500px;
+  overflow-y: scroll;
+}
+
+
