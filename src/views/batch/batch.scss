@@ -174,3 +174,127 @@ button {
   padding: 5px 10px;
   cursor: pointer;
 }
+
+.list-group-item{
+  margin-bottom: 5px;
+}
+
+.document-card {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid #ddd;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.document-card:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.document-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.document-title {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Button styling and hide initially */
+.view-doc-button {
+  margin-top: 15px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.document-card:hover .view-doc-button {
+  opacity: 1;
+}
+
+.pdf-placeholder-card {
+  width: 300px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.pdf-placeholder-card:hover {
+  transform: scale(1.05);
+}
+
+.pdf-placeholder-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.pdf-icon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.pdf-label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #d9534f;
+  margin-left: 5px;
+}
+
+.pdf-content-placeholder {
+  width: 80%;
+  height: 70%;
+  background: #f9f9f9;
+  border-radius: 4px;
+  position: relative;
+  padding: 10px;
+}
+
+.pdf-text {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.pdf-page {
+  width: 100%;
+  height: 85%;
+  background: #eaeaea;
+  border-radius: 4px;
+  position: relative;
+}
+
+/* Hide the button initially */
+.view-doc-button {
+  margin-top: 15px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  bottom: 20px;
+}
+
+/* Show the button on hover */
+.pdf-placeholder-card:hover .view-doc-button {
+  opacity: 1;
+}
