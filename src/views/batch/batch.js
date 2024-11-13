@@ -15,7 +15,7 @@ import NotificationAlert from "react-notification-alert";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import './batch.scss'; // Assuming you have a CSS file for additional styles
 import { DateTimeFormatter } from "components/Shared/DateTimeFormatter";
-import { getBatchList } from "services/document";
+import { getBatchList, postDocumentUpload } from "services/document";
 
 const Batch = () => {
   const [data, setData] = useState([]);
@@ -69,17 +69,9 @@ const Batch = () => {
 
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "https://localhost:44380/api/batch/documents/upload",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
-      const newBatchId = response.data;
+      const response = await postDocumentUpload(formData);
+      
+      const newBatchId = response.receiveObj;
       fetchData();
       notify("Files uploaded successfully!", "success");
 

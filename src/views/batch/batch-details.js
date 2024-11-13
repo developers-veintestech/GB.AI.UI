@@ -26,6 +26,7 @@ import { thumbnailPlugin } from "@react-pdf-viewer/thumbnail";
 import { fullScreenPlugin } from "@react-pdf-viewer/full-screen";
 import { zoomPlugin } from "@react-pdf-viewer/zoom";
 import "@react-pdf-viewer/core/lib/styles/index.css";
+import { getBatchDetail } from "services/document";
 import "./batch.scss";
 
 // Plugins
@@ -52,8 +53,8 @@ const BatchDetail = () => {
   const fetchData = async (id) => {
     try {
       setLoading(true);
-      const response = await axios.get(`https://localhost:44380/api/batch/${id}`);
-      setData(response.data);
+      const response = await getBatchDetail(id);
+      setData(response.receiveObj);
       setLoading(false);
     } catch (error) {
       setError(error.message);
