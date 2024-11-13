@@ -34,6 +34,7 @@ import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 // Import styles
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
+import FieldsTable from "./fields-table";
 
 const BatchDetail = () => {
   const [loading, setLoading] = useState(false);
@@ -45,8 +46,8 @@ const BatchDetail = () => {
   const [horizontalTabs, setHorizontalTabs] = useState({ 0: "document" });
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { id } = useParams();
-// Create new plugin instance
-const defaultLayoutPluginInstance = defaultLayoutPlugin();
+  // Create new plugin instance
+  const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   const fetchData = async (id) => {
     try {
@@ -75,7 +76,7 @@ const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   // Fetch documents in parallel and create an object with document IDs as keys and blob URLs as values
   const fetchDocumentsInParallel = async (batchId, documentId, splitIds) => {
-    try {      
+    try {
       // Create an array of promises for each document
       setLoading(true);
       const fetchPromises = splitIds.map(async (splitId) => {
@@ -97,7 +98,7 @@ const defaultLayoutPluginInstance = defaultLayoutPlugin();
     } catch (error) {
       console.error("Error fetching documents:", error);
       return null;
-    }finally{
+    } finally {
       setLoading(false);
     }
   };
@@ -116,11 +117,11 @@ const defaultLayoutPluginInstance = defaultLayoutPlugin();
     setIsModalOpen(false);
   }
 
-  const onDocumentChangeHandler = async (document)=>{
+  const onDocumentChangeHandler = async (document) => {
     setSelectedDocument(document)
     //const splitIds = document.details.map(x=>x.id);
     //const categoryDocuments = await fetchDocumentsInParallel(id, document.id, splitIds);
-    
+
   }
 
   useEffect(() => {
@@ -131,10 +132,10 @@ const defaultLayoutPluginInstance = defaultLayoutPlugin();
 
   useEffect(() => {
     async function fetchDocumentData() {
-      if (data && data.documents.length > 0) {        
+      if (data && data.documents.length > 0) {
         const document = data.documents[0];
-        await onDocumentChangeHandler(document);        
-        
+        await onDocumentChangeHandler(document);
+
         // Create a new object where the key is the index and the value is the static text 'document'
         const documentObject = document.details.reduce((acc, curr, index) => {
           acc[index] = 'document';  // Setting the value as static text 'document'
@@ -146,17 +147,17 @@ const defaultLayoutPluginInstance = defaultLayoutPlugin();
     }
 
     fetchDocumentData();
-    
+
   }, [data]);
 
   return (
     <>
       <div className="content">
-      {loading && (
-        <div className="loading-overlay">
-          <Spinner color="primary" style={{ width: "3rem", height: "3rem" }} />
-        </div>
-      )}
+        {loading && (
+          <div className="loading-overlay">
+            <Spinner color="primary" style={{ width: "3rem", height: "3rem" }} />
+          </div>
+        )}
         <Breadcrumb>
           <BreadcrumbItem>
             <RouterNavLink to={"/admin/batch"}> Batch List </RouterNavLink>
@@ -170,8 +171,8 @@ const defaultLayoutPluginInstance = defaultLayoutPlugin();
                 <ListGroup>
                   {data &&
                     data.documents.map((document, i) => (
-                      <ListGroupItem action active = {document.id === selectedDocument?.id ? true:false} color="info" tag="button" onClick={()=>onDocumentChangeHandler(document)}>
-                        {`# ${i+1} Document (${document.name})`}
+                      <ListGroupItem action active={document.id === selectedDocument?.id ? true : false} color="info" tag="button" onClick={() => onDocumentChangeHandler(document)}>
+                        {`# ${i + 1} Document (${document.name})`}
                       </ListGroupItem>
                     ))}
                 </ListGroup>
@@ -217,24 +218,36 @@ const defaultLayoutPluginInstance = defaultLayoutPlugin();
                             </Nav>
                             <TabContent className="tab-space pt-1 pb-0" activeTab={horizontalTabs[index]}>
                               <TabPane tabId="document">
-                                <div style={{height:'500px'}}>
+                                <div style={{ height: '500px' }}>
                                   {/* Thumbnail view for the first page */}
                                   <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
                                     <Viewer
                                       fileUrl={getDocumentDownloadUrl(id, selectedDocument.id, detail.id)}
-                                     plugins={[
-                                              // Register plugins
-                                              defaultLayoutPluginInstance                                              
-                                          ]}
+                                      plugins={[
+                                        // Register plugins
+                                        defaultLayoutPluginInstance
+                                      ]}
                                     />
                                   </Worker>
-                                  
+
                                   {/* <Button color="primary" onClick={()=>openModal(detail)}>
                                     View Full PDF
                                   </Button> */}
                                 </div>
                               </TabPane>
-                              <TabPane tabId="fields">In-Progress...</TabPane>
+                              <TabPane tabId="fields">
+                                <div>
+                                  {Object.keys(detail.fields).length > 0 
+                                    ?
+                                    <FieldsTable data={detail.fields}></FieldsTable>
+                                    :
+                                    <Card color="" className="my-2">
+                                      No Record Found.
+                                    </Card>
+                                  }
+                                </div>
+
+                              </TabPane>
                             </TabContent>
                           </CardBody>
                         </Card>

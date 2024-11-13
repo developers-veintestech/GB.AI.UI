@@ -298,3 +298,14 @@ button {
 .pdf-placeholder-card:hover .view-doc-button {
   opacity: 1;
 }
+
+.field-table{
+  width: 100%;
+  border-collapse: 'collapse'; 
+  margin-top: '2px'
+}
+
+.field-table-tr{
+   padding: 8px;
+    border: 1px solid rgb(221, 221, 221);
+}
