@@ -18,6 +18,7 @@ import {
   NavLink,
   Modal,
   Spinner,
+  Table,
 } from "reactstrap";
 import axios from "axios";
 import { NavLink as RouterNavLink, useParams } from "react-router-dom";
@@ -36,6 +37,7 @@ import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import FieldsTable from "./fields-table";
+import SortingTable from "components/SortingTable/SortingTable";
 
 const BatchDetail = () => {
   const [loading, setLoading] = useState(false);
@@ -181,20 +183,18 @@ const BatchDetail = () => {
             </Card>
           </Col>
           <Col md="8">
-            <Card color="light">
-              <CardBody className="pt-2">
-                {selectedDocument && selectedDocument.details.length > 0 &&
+          {selectedDocument && selectedDocument.details.length > 0 &&
                   selectedDocument.details.map((detail, index) => (
                     <Row key={index}>
                       <Col>
-                        <Card color="" className="my-2">
+                        <Card color="" className="mb-2">
                           <CardHeader>
                             <CardText>
                               Category: <strong>{detail.category}</strong>
                             </CardText>
                           </CardHeader>
                           <CardBody className="pt-2">
-                            <Nav className="nav-pills-info" pills>
+                            <Nav className="nav-pills-info category-tab" pills>
                               <NavItem>
                                 <NavLink
                                   data-toggle="tab"
@@ -216,28 +216,71 @@ const BatchDetail = () => {
                                   Fields
                                 </NavLink>
                               </NavItem>
+                              <NavItem>
+                                <NavLink
+                                  data-toggle="tab"
+                                  href="#pablo"
+                                  className={horizontalTabs[index] === "summary" ? "active" : ""}
+                                  onClick={() => changeActiveTab("summary", index)}
+                                >
+                                  Summary
+                                </NavLink>
+                              </NavItem>
                             </Nav>
-                            <TabContent className="tab-space pt-1 pb-0" activeTab={horizontalTabs[index]}>
+                            <TabContent className="tab-space pt-0 pb-0" activeTab={horizontalTabs[index]}>
                               <TabPane tabId="document">
-                                <div style={{ height: '500px' }}>
-                                  {/* Thumbnail view for the first page */}
-                                  <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                                    <Viewer
-                                      fileUrl={getDocumentDownloadUrl(id, selectedDocument.id, detail.id)}
-                                      plugins={[
-                                        // Register plugins
-                                        defaultLayoutPluginInstance
-                                      ]}
-                                    />
-                                  </Worker>
-
-                                  {/* <Button color="primary" onClick={()=>openModal(detail)}>
-                                    View Full PDF
-                                  </Button> */}
-                                </div>
+                                <Card color="light" className="my-2">
+                                  <CardBody className="p-2 tab-content-height">
+                                    {/* <div style={{ height: '500px' }}> */}
+                                      {/* Thumbnail view for the first page */}
+                                      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
+                                        <Viewer
+                                          fileUrl={getDocumentDownloadUrl(id, selectedDocument.id, detail.id)}
+                                          plugins={[
+                                            // Register plugins
+                                            defaultLayoutPluginInstance
+                                          ]}
+                                        />
+                                      </Worker>
+                                    {/* </div> */}
+                                  </CardBody>
+                                </Card>
                               </TabPane>
                               <TabPane tabId="fields">
-                                <div>
+                                <Card color="light" className="my-2">
+                                    <CardBody className="p-2">                                      
+                                      <Card className="m-0">    
+                                        <CardBody className="p-0 tab-content-height">                                      
+                                        <Table>
+                                          <thead className="text-primary">
+                                            <tr>
+                                              <th className="text-center">#</th>
+                                              <th>Field Name</th>
+                                              <th>Field Value</th>                                        
+                                            </tr>
+                                          </thead>
+                                          <tbody>
+                                          {Object.keys(detail.fields).length > 0 ?
+                                          <>
+                                            {Object.entries(detail.fields).map(([key, value],i) => (
+                                              <tr>
+                                                <td className="text-center">{i+1}</td>
+                                                <td>{key}</td>
+                                                <td>{value}</td>
+                                              </tr>))}
+                                          </>:
+                                          <tr>
+                                            <td className="text-center" colSpan={3}>No Record Found</td>
+                                          </tr>
+                                          }
+                                            
+                                            </tbody>
+                                            </Table>
+                                            </CardBody>
+                                      </Card>
+                                    </CardBody>
+                                  </Card>                             
+                                {/* <div style={{ height: '500px' }}>
                                   {Object.keys(detail.fields).length > 0 
                                     ?
                                     <FieldsTable data={detail.fields}></FieldsTable>
@@ -246,8 +289,19 @@ const BatchDetail = () => {
                                       No Record Found.
                                     </Card>
                                   }
-                                </div>
+                                </div> */}
 
+                              </TabPane>
+                              <TabPane tabId="summary">
+                                <Card color="light" className="my-2">
+                                    <CardBody className="p-2">                                      
+                                      <Card className="m-0">    
+                                        <CardBody className="p-0 tab-content-height">                                      
+                                          In Progress
+                                        </CardBody>
+                                      </Card>
+                                    </CardBody>
+                                  </Card>                               
                               </TabPane>
                             </TabContent>
                           </CardBody>
@@ -264,8 +318,6 @@ const BatchDetail = () => {
                     </Col>
                   </Row>
                 )}
-              </CardBody>
-            </Card>
           </Col>
         </Row>
       </div>
