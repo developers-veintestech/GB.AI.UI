@@ -38,6 +38,7 @@ import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import FieldsTable from "./fields-table";
 import SortingTable from "components/SortingTable/SortingTable";
+import MemoizedViewer from "./pdf-viewer";
 
 const BatchDetail = () => {
   const [loading, setLoading] = useState(false);
@@ -73,8 +74,13 @@ const BatchDetail = () => {
 
 
   // Define a function to get the download URL
-  const getDocumentDownloadUrl = (batchId, documentId, splitId) => {
+  const getSplitDocumentDownloadUrl = (batchId, documentId, splitId) => {
     return `${process.env.REACT_APP_API_BASE_URL}batch/${batchId}/document/${documentId}/split/${splitId}/download`;
+  };
+
+   // Define a function to get the download URL
+   const getDocumentDownloadUrl = (batchId, documentId) => {
+    return `${process.env.REACT_APP_API_BASE_URL}batch/${batchId}/document/${documentId}/download`;
   };
 
   // Fetch documents in parallel and create an object with document IDs as keys and blob URLs as values
@@ -83,7 +89,7 @@ const BatchDetail = () => {
       // Create an array of promises for each document
       setLoading(true);
       const fetchPromises = splitIds.map(async (splitId) => {
-        const url = getDocumentDownloadUrl(batchId, documentId, splitId);
+        const url = getSplitDocumentDownloadUrl(batchId, documentId, splitId);
         const response = await axios.get(url, { responseType: "blob" });
         const blobUrl = URL.createObjectURL(response.data);
 
@@ -168,9 +174,9 @@ const BatchDetail = () => {
           <BreadcrumbItem active>Batch Details</BreadcrumbItem>
         </Breadcrumb>
         <Row>
-          <Col md="4">
+          <Col md="4" className="pr-1">
             <Card className="card-user">
-              <CardBody>
+              <CardBody className="document-list-item-height">
                 <ListGroup>
                   {data &&
                     data.documents.map((document, i) => (
@@ -181,8 +187,22 @@ const BatchDetail = () => {
                 </ListGroup>
               </CardBody>
             </Card>
+            {selectedDocument &&
+              <Card className="card-user">
+                <CardHeader>
+                            <CardText>
+                              <strong>Original Document</strong>
+                            </CardText>
+                          </CardHeader>
+                <CardBody className="document-viewer">    
+                  <MemoizedViewer key={`document-pdf-viewer-${selectedDocument.id}`} fileUrl={getDocumentDownloadUrl(id, selectedDocument.id)} />            
+                </CardBody>
+              </Card>
+            }
+            
           </Col>
           <Col md="8">
+          <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
           {selectedDocument && selectedDocument.details.length > 0 &&
                   selectedDocument.details.map((detail, index) => (
                     <Row key={index}>
@@ -233,15 +253,15 @@ const BatchDetail = () => {
                                   <CardBody className="p-2 tab-content-height">
                                     {/* <div style={{ height: '500px' }}> */}
                                       {/* Thumbnail view for the first page */}
-                                      <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.4.120/build/pdf.worker.min.js">
-                                        <Viewer
+                                      <MemoizedViewer key={`pdf-viewer-${index}`} fileUrl={getSplitDocumentDownloadUrl(id, selectedDocument.id, detail.id)} />
+                                        {/* <Viewer key={`pdf-viewer-${index}`}
                                           fileUrl={getDocumentDownloadUrl(id, selectedDocument.id, detail.id)}
                                           plugins={[
                                             // Register plugins
                                             defaultLayoutPluginInstance
                                           ]}
-                                        />
-                                      </Worker>
+                                        /> */}
+                                      
                                     {/* </div> */}
                                   </CardBody>
                                 </Card>
@@ -309,7 +329,8 @@ const BatchDetail = () => {
                       </Col>
                     </Row>
                   ))}
-                {(!selectedDocument || selectedDocument.details.length == 0) && (
+                  </Worker>
+                {(!selectedDocument || selectedDocument.details.length === 0) && (
                   <Row>
                     <Col>
                       <Card color="" className="my-2">

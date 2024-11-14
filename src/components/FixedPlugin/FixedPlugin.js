@@ -52,7 +52,7 @@ const FixedPlugin = (props) => {
             handleClick();
           }}
         >
-          <i className="fa fa-cog fa-2x" />
+          {/* <i className="fa fa-cog fa-2x" /> */}
         </a>
         <ul className="dropdown-menu show">
           <li className="header-title">SIDEBAR BACKGROUND</li>
