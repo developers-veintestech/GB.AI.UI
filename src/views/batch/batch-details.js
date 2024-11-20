@@ -39,6 +39,7 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 import FieldsTable from "./fields-table";
 import SortingTable from "components/SortingTable/SortingTable";
 import MemoizedViewer from "./pdf-viewer";
+import { reExcecuteDocumentCategory } from "services/document";
 
 const BatchDetail = () => {
   const [loading, setLoading] = useState(false);
@@ -159,6 +160,15 @@ const BatchDetail = () => {
 
   }, [data]);
 
+  const reExcecuteDocument = (categoryId) =>{
+    let request = {
+      batchId: id,
+      documentId: selectedDocument.id,
+      categoryIds:[categoryId]
+    }
+     reExcecuteDocumentCategory(request);
+  }
+
   return (
     <>
       <div className="content">
@@ -246,7 +256,13 @@ const BatchDetail = () => {
                                   Summary
                                 </NavLink>
                               </NavItem>
+                              <NavItem className="re-excecute">
+                                <Button size="sm" onClick={() => {reExcecuteDocument(detail.id)}} >
+                                  Re-Excecute
+                                </Button>
+                              </NavItem>
                             </Nav>
+                            
                             <TabContent className="tab-space pt-0 pb-0" activeTab={horizontalTabs[index]}>
                               <TabPane tabId="document">
                                 <Card color="light" className="my-2">

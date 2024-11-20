@@ -35,3 +35,15 @@ export const getBatchDetail = (batchId) => {
             });
     });
 }
+
+export const reExcecuteDocumentCategory = (payload) => {
+    return new Promise((resolve, reject) => {
+        get(process.env.REACT_APP_API_BASE_URL, `document/category/re-excecute`, payload)
+            .then((response) => {
+                return resolve({ success: true, receiveObj: response.data })
+            })
+            .catch((error) => {
+                return reject({ success: false, receiveObj: error })
+            });
+    });
+}
