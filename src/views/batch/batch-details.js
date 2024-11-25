@@ -332,7 +332,7 @@ const BatchDetail = () => {
                                 <Card color="light" className="my-2">
                                     <CardBody className="p-2">                                      
                                       <Card className="m-0">    
-                                        <CardBody className="p-0 tab-content-height">                                      
+                                        <CardBody className="tab-content-height">                                      
                                           <p>{detail.summary ? detail.summary: 'No Summary Found'}</p>
                                         </CardBody>
                                       </Card>
