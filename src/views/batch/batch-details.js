@@ -143,19 +143,21 @@ const BatchDetail = () => {
   useEffect(() => {
     async function fetchDocumentData() {
       if (data && data.documents.length > 0) {
-        const document = data.documents[0];
-        await onDocumentChangeHandler(document);
-
-        // Create a new object where the key is the index and the value is the static text 'document'
-        const documentObject = document.details.reduce((acc, curr, index) => {
-          acc[index] = 'document';  // Setting the value as static text 'document'
-          return acc;
-        }, {});
-        setHorizontalTabs(documentObject);
-
+        let isPatientSplitDocument = data.documents.filter(x => x.is_patient_split);
+ 
+        if(isPatientSplitDocument && isPatientSplitDocument.length > 0){
+          const document = isPatientSplitDocument[0];
+          await onDocumentChangeHandler(document);
+  
+          // Create a new object where the key is the index and the value is the static text 'document'
+          const documentObject = document.details.reduce((acc, curr, index) => {
+            acc[index] = 'document';  // Setting the value as static text 'document'
+            return acc;
+          }, {});
+          setHorizontalTabs(documentObject);
+        }
       }
     }
-
     fetchDocumentData();
 
   }, [data]);
@@ -189,7 +191,7 @@ const BatchDetail = () => {
               <CardBody className="document-list-item-height">
                 <ListGroup>
                   {data &&
-                    data.documents.map((document, i) => (
+                    data.documents.filter(x => x.is_patient_split).map((document, i) => (
                       <ListGroupItem action active={document.id === selectedDocument?.id ? true : false} color="info" tag="button" onClick={() => onDocumentChangeHandler(document)}>
                         {`# ${i + 1} Document (${document.name})`}
                       </ListGroupItem>
