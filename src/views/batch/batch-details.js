@@ -203,11 +203,23 @@ const BatchDetail = () => {
               <Card className="card-user">
                 <CardHeader>
                             <CardText>
-                              <strong>Original Document</strong>
+                              <strong>Patient Document</strong>
                             </CardText>
                           </CardHeader>
                 <CardBody className="document-viewer">    
                   <MemoizedViewer key={`document-pdf-viewer-${selectedDocument.id}`} fileUrl={getDocumentDownloadUrl(id, selectedDocument.id)} />            
+                </CardBody>
+              </Card>
+            }
+            {selectedDocument && selectedDocument.parent_document_id !== null &&
+              <Card className="card-user">
+                <CardHeader>
+                  <CardText>
+                    <strong>Original Document</strong>
+                  </CardText>
+                </CardHeader>
+                <CardBody className="document-viewer">
+                  <MemoizedViewer key={`document-pdf-viewer-${selectedDocument.parent_document_id}`} fileUrl={getDocumentDownloadUrl(id, selectedDocument.parent_document_id)} />
                 </CardBody>
               </Card>
             }
