@@ -8,19 +8,26 @@ import {
   Table,
   Row,
   Col,
+  Input,
+  Label,
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { AiOutlineCloudUpload } from "react-icons/ai";
-import './batch.scss'; // Assuming you have a CSS file for additional styles
+import "./batch.scss"; // Assuming you have a CSS file for additional styles
 import { DateTimeFormatter } from "components/Shared/DateTimeFormatter";
-import { getBatchList, postDocumentUpload } from "services/document";
+import { getBatchList, getProviderList, postDocumentUpload } from "services/document";
 
 const Batch = () => {
   const [data, setData] = useState([]);
+  console.log('data', data)
   const [files, setFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState("");
+  console.log('selectesdProvider', selectedProvider)
+  const [providers, setProviders] = useState([]);
+  console.log('providers', providers)
   const notificationAlertRef = useRef(null);
   const navigate = useNavigate();
 
@@ -33,12 +40,22 @@ const Batch = () => {
     }
   };
 
+  const fetchProvider = async () => {
+    try {
+      const response = await getProviderList();
+      setProviders(response.receiveObj);
+    } catch (error) {
+      console.error("Error fetching providers:", error.message);
+    }
+  };
+
   const onViewDetailHandler = (id) => {
     navigate(`/admin/batch-detail/${id}`);
   };
 
   useEffect(() => {
     fetchData();
+    fetchProvider();
   }, []);
 
   const handleFileChange = (event) => {
@@ -56,13 +73,23 @@ const Batch = () => {
     e.preventDefault();
   };
 
+  const handleProviderChange = (e) => {
+    setSelectedProvider(e.target.value);
+  };
+
   const handleUpload = async () => {
+    if (selectedProvider === "") {
+      notify("Please select a provider.", "danger");
+      return;
+    }
+
     if (files.length === 0) {
       alert("Please select files to upload.");
       return;
     }
 
     const formData = new FormData();
+    formData.append("providerId", selectedProvider);
     files.forEach((file) => {
       formData.append("files", file);
     });
@@ -70,14 +97,14 @@ const Batch = () => {
     setIsLoading(true);
     try {
       const response = await postDocumentUpload(formData);
-      
+
       const newBatchId = response.receiveObj;
       fetchData();
       notify("Files uploaded successfully!", "success");
 
       setFiles([]);
       setIsLoading(false);
-      
+
       navigate(`/admin/batch-detail/${newBatchId}`);
     } catch (error) {
       console.error("Upload failed:", error);
@@ -85,6 +112,11 @@ const Batch = () => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const getProviderName = (providerId) => {
+    const provider = providers.find((p) => p.id === providerId);
+    return provider ? provider.name : "";
   };
 
   const notify = (message, type) => {
@@ -108,6 +140,29 @@ const Batch = () => {
               <CardHeader>
                 <CardTitle tag="h4">Batch Upload</CardTitle>
               </CardHeader>
+              <CardBody>
+                <Row>
+                  <Col md={3} className="ml-2">
+                    <label for="providerSelect" className="font-weight-bold">Provider</label>
+                    <Input
+                      type="select"
+                      name="provider"
+                      id="providerSelect"
+                      value={selectedProvider}
+                      onChange={handleProviderChange}
+                    >
+                      <option value="" disabled>
+                        Select a provider
+                      </option>
+                      {providers.map((provider) => (
+                        <option key={provider.id} value={provider.id}>
+                          {provider.name}
+                        </option>
+                      ))}
+                    </Input>
+                  </Col>
+                </Row>
+              </CardBody>
               <CardBody
                 onDrop={handleDrop}
                 onDragOver={handleDragOver}
@@ -182,6 +237,7 @@ const Batch = () => {
                       <th className="text-center">#</th>
                       <th>Batch Id</th>
                       <th>Status</th>
+                      <th>Provider</th>
                       <th>Created Date</th>
                       <th>Modified Date</th>
                       <th>Actions</th>
@@ -193,6 +249,7 @@ const Batch = () => {
                         <td className="text-center">{i + 1}</td>
                         <td>{x.id}</td>
                         <td>{x.status}</td>
+                        <td>{getProviderName(x.provider_id)}</td>
                         <td>{DateTimeFormatter(x.created_date)}</td>
                         <td>{DateTimeFormatter(x.modified_date)}</td>
                         <td>
