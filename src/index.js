@@ -36,6 +36,7 @@ root.render(
       <Route path="/admin/*" element={<AdminLayout />} />
       {/* <Route path="/rtl/*" element={<RTLLayout />} /> */}
       <Route path="*" element={<Navigate to="/admin/batch" replace />} />
+      <Route path="/auth/*" element={<AuthLayout />} />
     </Routes>
   </BrowserRouter>
 );

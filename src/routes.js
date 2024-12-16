@@ -58,7 +58,17 @@ const routes = [
     component: <BatchDetail />,
     layout: "/admin",
     redirect:true
+  },
+  {
+    path: "/login",
+    name: "Login",
+    rtlName: "هعذاتسجيل الدخول",
+    mini: "L",
+    rtlMini: "هعذا",
+    component: <Login />,
+    layout: "/auth",
   }
+
   // {
   //   collapse: true,
   //   name: "Pages",
