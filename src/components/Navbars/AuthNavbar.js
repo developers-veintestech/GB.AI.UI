@@ -66,35 +66,7 @@ const AuthNavbar = (props) => {
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
         </button>
-        <Collapse isOpen={collapseOpen} navbar>
-          <Nav navbar className="ml-auto">
-            <NavItem>
-              <NavLink to="/admin/dashboard" className="nav-link text-primary">
-                <i className="tim-icons icon-minimal-left" /> Back to Dashboard
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to="/auth/register" className="nav-link">
-                <i className="tim-icons icon-laptop" /> Register
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to="/auth/login" className="nav-link">
-                <i className="tim-icons icon-single-02" /> Login
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to="/auth/pricing" className="nav-link">
-                <i className="tim-icons icon-coins" /> Pricing
-              </NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink to="/auth/lock-screen" className="nav-link">
-                <i className="tim-icons icon-lock-circle" /> Lock
-              </NavLink>
-            </NavItem>
-          </Nav>
-        </Collapse>
+        
       </Container>
     </Navbar>
   );

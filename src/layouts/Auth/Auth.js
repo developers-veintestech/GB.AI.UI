@@ -14,6 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import axios from 'axios';
 import React from "react";
 import { Route, Routes, Navigate } from "react-router-dom";
 
@@ -92,3 +93,32 @@ const Pages = (props) => {
 };
 
 export default Pages;
+
+export const login = async (payload) => {
+  const { username, password} = payload;
+
+  try {
+    const response = await axios.post('https://localhost:44380/admin/user/login', {
+      username,
+      password,
+    });
+    if (response.data) {
+      return {
+        success: true,
+        token: response.data.token, 
+        message: 'Login successful',
+      };
+    } else {
+      return {
+        success: false,
+        message: response.data.message || 'Invalid credentials. Please try again.',
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: 'An error occurred while logging in. Please try again.',
+    };
+  }
+};
