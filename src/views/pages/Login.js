@@ -1,17 +1,30 @@
-/*!
+import React, { useState } from "react";
+import classnames from "classnames";
+import { Button, Card, CardHeader, CardBody, CardFooter, CardTitle, Form, Input, InputGroupAddon, InputGroupText, InputGroup, Container, Col, Breadcrumb, BreadcrumbItem } from "reactstrap";
+import { login } from "../../layouts/Auth/Auth";
 
-=========================================================
-* Black Dashboard PRO React - v1.2.4
-=========================================================
+const Login = () => {
+  const [state, setState] = useState({
+    username: "",
+    password: "",
+    emailFocus: false,
+    passFocus: false,
+    loading: false,
+    clientid:"",
+    clientsecret:""
 
-* Product Page: https://www.creative-tim.com/product/black-dashboard-pro-react
-* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+  });
 
-* Coded by Creative Tim
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    const { email, password } = state;
 
-=========================================================
+    if (!email || !password) {
+      alert("Please fill in all fields.");
+      return;
+    }
 
-* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+    setState({ ...state, loading: true });
 
 */
 import React, { useState } from "react";

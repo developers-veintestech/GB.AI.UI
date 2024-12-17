@@ -1,0 +1,335 @@
+.upload-card {
+    margin-bottom: 20px;
+  }
+  
+  .drop-area {
+    padding: 30px;
+    text-align: center;
+    border: 2px dashed #007bff;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    cursor: pointer;
+  }
+  
+  .drop-area:hover {
+    background-color: #e7f3ff;
+  }
+  
+  .icon-container {
+    margin-bottom: 10px;
+  }
+
+  .spinner-border {
+    margin-right: 5px;
+    color: white;
+  }
+
+  .loader{
+    display: flex;
+  }
+
+  .loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+
+  .custom-small-btn {
+    font-size: 0.75rem !important;
+    padding: 0.25rem 0.5rem !important;
+  }
+  
+  
+  
+
+  .card-shadow{
+    box-shadow: -25px 3rem 26rem 14rem rgba(36, 48, 60, 0.075) !important;
+  }
+/* General layout styling */
+.app {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.row {
+  display: flex;
+}
+
+/* Sidebar styling */
+.sidebar {
+  max-width: 200px;
+  margin-right: 20px;
+}
+
+.document-list {
+  list-style-type: none;
+  padding: 0;
+  margin-right: 811px;
+  margin-top: 80px;
+}
+
+.document-list li {
+  padding: 10px;
+  background-color: #e0e0e0;
+  border-radius: 4px;
+}
+
+.document-list li.active {
+  background-color: #007bff;  /* Highlight color */
+  color: white;  /* Text color when highlighted */
+}
+
+/* Main content styling */
+.main-content {
+  flex: 3 1;
+  margin-left: -807px;
+  background-color: #e0e0e0;
+}
+
+/* Section styling */
+.section {
+  margin-bottom: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 15px;
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.tabs {
+  display: flex;
+}
+
+.tabs button {
+  margin-right: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-weight: bold;
+  color: #007bff;
+}
+
+.tabs button.active {
+  color: #000;
+  border-bottom: 2px solid #007bff;
+  background-color: #e0e0e0;
+}
+
+
+/* Fields content styling */
+.fields-content {
+  background-color: #e0e0e0;
+  height: 85px;
+  width: 1041px;
+}
+
+.fields-content-col{
+  margin-left: 13px;
+}
+.fields-content-row{
+  padding-top: 7px;
+}
+
+/* Documents styling */
+.documents-row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.pdf {
+  width: 60px;
+  height: 60px;
+  background-color: #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.pdf-viewer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pdf-controls {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+button {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.list-group-item{
+  margin-bottom: 5px;
+}
+
+.document-card {
+  width: 300px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid #ddd;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+.document-card:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+}
+
+.document-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.document-title {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #333;
+}
+
+/* Button styling and hide initially */
+.view-doc-button {
+  margin-top: 15px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.document-card:hover .view-doc-button {
+  opacity: 1;
+}
+
+.pdf-placeholder-card {
+  width: 300px;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+  transition: transform 0.2s ease;
+}
+
+.pdf-placeholder-card:hover {
+  transform: scale(1.05);
+}
+
+.pdf-placeholder-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.pdf-icon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.pdf-label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #d9534f;
+  margin-left: 5px;
+}
+
+.pdf-content-placeholder {
+  width: 80%;
+  height: 70%;
+  background: #f9f9f9;
+  border-radius: 4px;
+  position: relative;
+  padding: 10px;
+}
+
+.pdf-text {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.pdf-page {
+  width: 100%;
+  height: 85%;
+  background: #eaeaea;
+  border-radius: 4px;
+  position: relative;
+}
+
+/* Hide the button initially */
+.view-doc-button {
+  margin-top: 15px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  position: absolute;
+  bottom: 20px;
+}
+
+/* Show the button on hover */
+.pdf-placeholder-card:hover .view-doc-button {
+  opacity: 1;
+}
+
+.category-tab{
+.nav-link{
+  padding: 7px !important;
+}
+}
+
+.table-responsive{
+  overflow: hidden;
+}
+
+.tab-content-height{ 
+   height: 500px;
+  overflow-y: scroll;
+}
+
+.document-list-item-height{ 
+  max-height: 500px;
+ overflow-y: scroll;
+}
+
+.document-viewer{
+  height: 700px;
+}
+
+
+.main-panel {
+  .content{
+    padding-left: 30px !important;
+  }
+} 
+
+.re-excecute{
+  margin-left: 743px;
+}

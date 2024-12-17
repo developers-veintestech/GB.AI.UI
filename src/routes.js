@@ -42,6 +42,7 @@ import User from "views/pages/User.js";
 import Login from "views/pages/Login.js";
 import Rtl from "views/pages/Rtl.js";
 import Lock from "views/pages/Lock.js";
+import BatchDetail from "views/batch/batch-details";
 
 const routes = [
   {
@@ -51,7 +52,23 @@ const routes = [
     icon: "tim-icons icon-chart-pie-36",
     component: <Batch />,
     layout: "/admin",
+  },{
+    path: "/batch-detail/:id?",
+    name: "Batch Detail",    
+    component: <BatchDetail />,
+    layout: "/admin",
+    redirect:true
   },
+  {
+    path: "/login",
+    name: "Login",
+    rtlName: "هعذاتسجيل الدخول",
+    mini: "L",
+    rtlMini: "هعذا",
+    component: <Login />,
+    layout: "/auth",
+  }
+
   // {
   //   collapse: true,
   //   name: "Pages",

@@ -174,22 +174,22 @@ const Admin = (props) => {
           <i className="tim-icons icon-bullet-list-67 visible-on-sidebar-mini text-muted" />
         </button>
       </div>
-      <Sidebar
+      {/* <Sidebar
         {...props}
         routes={routes}
         activeColor={activeColor}
         logo={{
-          outterLink: "https://www.creative-tim.com/",
-          text: "Creative Tim",
+          outterLink: "",
+          text: "Document Manager",
           imgSrc: logo,
         }}
         closeSidebar={closeSidebar}
-      />
+      /> */}
       <div className="main-panel" ref={mainPanelRef} data={activeColor}>
         <AdminNavbar
           {...props}
           handleMiniClick={handleMiniClick}
-          brandText={getActiveRoute(routes)}
+          brandText={'GB AI Doc Manager'}
           sidebarOpened={sidebarOpened}
           toggleSidebar={toggleSidebar}
         />
