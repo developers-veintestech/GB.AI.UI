@@ -16,18 +16,15 @@ import { useNavigate } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import "./batch.scss"; // Assuming you have a CSS file for additional styles
-import { DateTimeFormatter } from "components/Shared/DateTimeFormatter";
 import { getBatchList, getProviderList, postDocumentUpload } from "services/document";
+import { DateTimeFormatter } from "components/Shared/DateTimeFormatter";
 
 const Batch = () => {
   const [data, setData] = useState([]);
-  console.log('data', data)
   const [files, setFiles] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState("");
-  console.log('selectesdProvider', selectedProvider)
   const [providers, setProviders] = useState([]);
-  console.log('providers', providers)
   const notificationAlertRef = useRef(null);
   const navigate = useNavigate();
 
@@ -118,6 +115,15 @@ const Batch = () => {
     const provider = providers.find((p) => p.id === providerId);
     return provider ? provider.name : "";
   };
+
+  const getDocumentNames = (documents) => {
+    if (!documents || documents.length === 0) return "";
+  
+    return documents
+      .filter((doc) => !doc.is_patient_split)
+      .map((doc) => doc.name) 
+      .join(", "); 
+  };  
 
   const notify = (message, type) => {
     const options = {
@@ -238,8 +244,8 @@ const Batch = () => {
                       <th>Batch Id</th>
                       <th>Status</th>
                       <th>Provider</th>
+                      <th>File Name</th>
                       <th>Created Date</th>
-                      <th>Modified Date</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -250,8 +256,8 @@ const Batch = () => {
                         <td>{x.id}</td>
                         <td>{x.status}</td>
                         <td>{getProviderName(x.provider_id)}</td>
+                        <td>{getDocumentNames(x.documents)}</td>
                         <td>{DateTimeFormatter(x.created_date)}</td>
-                        <td>{DateTimeFormatter(x.modified_date)}</td>
                         <td>
                           <Button
                             color="info"
