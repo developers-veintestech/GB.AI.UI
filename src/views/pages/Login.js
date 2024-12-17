@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import classnames from "classnames";
-import { Button, Card, CardHeader, CardBody, CardFooter, CardTitle, Form, Input, InputGroupAddon, InputGroupText, InputGroup, Container, Col } from "reactstrap";
+import { Button, Card, CardHeader, CardBody, CardFooter, CardTitle, Form, Input, InputGroupAddon, InputGroupText, InputGroup, Container, Col, Breadcrumb, BreadcrumbItem } from "reactstrap";
 import { login } from "../../layouts/Auth/Auth";
 
 const Login = () => {
@@ -54,9 +54,8 @@ const Login = () => {
         <Col className="ml-auto mr-auto" lg="4" md="6">
           <Form className="form" onSubmit={handleLogin}>
             <Card className="card-login card-white">
-              <CardHeader>
-                <img alt="..." src={require("assets/img/card-primary.png")} />
-                <CardTitle tag="h1">Log in</CardTitle>
+              <CardHeader>                
+                <CardTitle className="text-center" tag="h1">Log in</CardTitle>             
               </CardHeader>
               <CardBody>
                 <InputGroup className={classnames({ "input-group-focus": state.emailFocus })}>
