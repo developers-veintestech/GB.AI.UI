@@ -13,12 +13,16 @@ const FeedbackModal = ({ isOpen, onClose, batchId }) => {
 
   const handleSubmitFeedback = async () => {
     try {
-      const response = await AddCaptureFeedback(batchId, feedback);
-      console.log("response", response);
+      if(!feedback){
+        alert("Please enter feedback.")
+        return;
+      }
+      
+      const response = await AddCaptureFeedback(batchId, feedback);      
       onClose(false);
-      notify("Feedback submitted successfully!", "success");
+      notify("Feedback captured successfully!", "success");
     } catch (error) {
-      console.error("Error submitting feedback:", error.message);
+      console.error("Error on capturing feedback:", error.message);
     }
   };
 
@@ -38,16 +42,7 @@ const FeedbackModal = ({ isOpen, onClose, batchId }) => {
       <Modal isOpen={isOpen} toggle={onClose}>
         <ModalHeader toggle={onClose}>Feedback</ModalHeader>
         <ModalBody>
-          <label
-            htmlFor="feedbackInput"
-            style={{
-              display: "block",
-              marginBottom: "8px",
-              fontWeight: "bold",
-            }}
-          >
-            Enter your feedback
-          </label>
+         
           <textarea
             id="feedbackInput"
             rows="5"
