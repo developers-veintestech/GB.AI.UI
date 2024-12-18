@@ -22,6 +22,7 @@ import AuthNavbar from "components/Navbars/AuthNavbar.js";
 import Footer from "components/Footer/Footer.js";
 
 import routes from "routes.js";
+import { userLogin } from 'services/auth';
 
 const Pages = (props) => {
   React.useEffect(() => {
@@ -98,7 +99,7 @@ export const login = async (payload) => {
   const { username, password} = payload;
 
   try {
-    const response = await axios.post('https://localhost:44380/admin/user/login', {
+    const response = await userLogin({
       username,
       password,
     });
