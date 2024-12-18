@@ -5,6 +5,7 @@ import NotificationAlert from "react-notification-alert";
 
 const FeedbackModal = ({ isOpen, onClose, batchId }) => {
   const [feedback, setFeedback] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const notificationAlertRef = useRef(null);
 
   const handleInputChange = (e) => {
@@ -12,6 +13,7 @@ const FeedbackModal = ({ isOpen, onClose, batchId }) => {
   };
 
   const handleSubmitFeedback = async () => {
+    setIsLoading(true);
     try {
       const response = await AddCaptureFeedback(batchId, feedback);
       console.log("response", response);
@@ -19,6 +21,9 @@ const FeedbackModal = ({ isOpen, onClose, batchId }) => {
       notify("Feedback submitted successfully!", "success");
     } catch (error) {
       console.error("Error submitting feedback:", error.message);
+      notify("Error submitting feedback. Please try again.", "danger");
+    } finally {
+      setIsLoading(false); 
     }
   };
 
@@ -65,11 +70,22 @@ const FeedbackModal = ({ isOpen, onClose, batchId }) => {
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={onClose}>
+          <Button color="secondary" onClick={onClose} disabled={isLoading}>
             Close
           </Button>
-          <Button color="primary" onClick={handleSubmitFeedback}>
-            Submit
+          <Button color="primary" onClick={handleSubmitFeedback} disabled={isLoading}>
+            {isLoading ? (
+              <div className="loader">
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>{" "}
+                Submitting...
+              </div>
+            ) : (
+              "Submit"
+            )}
           </Button>
         </ModalFooter>
       </Modal>
