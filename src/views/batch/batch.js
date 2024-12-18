@@ -245,6 +245,7 @@ const Batch = () => {
                       <th>Status</th>
                       <th>Provider</th>
                       <th>File Name</th>
+                      <th>Feedback</th>
                       <th>Created Date</th>
                       <th>Actions</th>
                     </tr>
@@ -257,6 +258,7 @@ const Batch = () => {
                         <td>{x.status}</td>
                         <td>{getProviderName(x.provider_id)}</td>
                         <td>{getDocumentNames(x.documents)}</td>
+                        <td>{x.feedback}</td>
                         <td>{DateTimeFormatter(x.created_date)}</td>
                         <td>
                           <Button
