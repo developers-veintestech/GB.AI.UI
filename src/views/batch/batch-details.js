@@ -309,19 +309,22 @@ const BatchDetail = () => {
                                 Summary
                               </NavLink>
                             </NavItem>
-                            <NavItem className="re-excecute">
-                              <Button
+                            {index === 0 &&
+                              <NavItem className="re-excecute">
+                              {/* <Button
                                 size="sm"
                                 onClick={() => {
                                   reExcecuteDocument(detail.id);
                                 }}
                               >
                                 Re-Excecute
-                              </Button>
-                              <Button size="sm" onClick={() => openModal(data.id)}>
-                                Feedback
+                              </Button> */}
+                              <Button size="sm" color="primary" onClick={() => openModal(data.id)}>
+                                Capture Feedback
                               </Button>
                             </NavItem>
+                            }
+                            
                           </Nav>
 
                           <TabContent
