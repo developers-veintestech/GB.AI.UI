@@ -1,48 +1,75 @@
+/*!
+
+=========================================================
+* Black Dashboard PRO React - v1.2.4
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/black-dashboard-pro-react
+* Copyright 2024 Creative Tim (https://www.creative-tim.com)
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+*/
 import React, { useState } from "react";
 import classnames from "classnames";
 import { Button, Card, CardHeader, CardBody, CardFooter, CardTitle, Form, Input, InputGroupAddon, InputGroupText, InputGroup, Container, Col } from "reactstrap";
 import { login } from "../../layouts/Auth/Auth";
-import { useNavigate } from "react-router-dom";
-import { userLogin } from "services/auth";
 
 const Login = () => {
-  const navigate = useNavigate();
   const [state, setState] = useState({
     username: "",
     password: "",
     emailFocus: false,
     passFocus: false,
-    loading: false
+    loading: false,
+    errors: {}
   });
+
+  const validateForm = () => {
+    const errors = {};
+    const { username, password } = state;
+
+    // Validate that the email is not blank
+    if (!username) {
+      errors.username = "Email is required.";
+    }
+
+    // Validate that the password is not blank
+    if (!password) {
+      errors.password = "Password is required.";
+    }
+
+    setState({ ...state, errors });
+    return Object.keys(errors).length === 0;
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const { email, password } = state;
-
-    if (!email || !password) {
-      alert("Please fill in all fields.");
+    if (!validateForm()) {
       return;
     }
-
+    const { username, password } = state;
     setState({ ...state, loading: true });
 
     try {
-      
-      const payload = { username: email, password};
-      const response = await userLogin(payload); 
-      //console.log('response8888', response)
+      const payload = { username, password };
+      const response = await login(payload);
+      console.log('response8888', response);
 
-      if (response.receiveObj) {
-        const token = JSON.stringify( response.receiveObj.token);
-        localStorage.setItem("token", token); 
-        navigate("/admin/batch"); 
-        
+      if (response.success) {
+        const token = JSON.stringify(response.token);
+        localStorage.setItem("token", token);
+        window.location.href = "/admin/batch";
       } else {
         alert(response.message || "Invalid credentials. Please try again.");
       }
     } catch (error) {
       console.error(error);
-      alert("Invalid credentials. Please try again.");
+      alert("An error occurred while logging in. Please try again.");
     } finally {
       setState({ ...state, loading: false });
     }
@@ -54,11 +81,11 @@ const Login = () => {
         <Col className="ml-auto mr-auto" lg="4" md="6">
           <Form className="form" onSubmit={handleLogin}>
             <Card className="card-login card-white">
-              <CardHeader>                
-                <CardTitle className="text-center" tag="h1">Log in</CardTitle>             
+              <CardHeader>
+                <CardTitle className="text-center" tag="h1">Log in</CardTitle>
               </CardHeader>
               <CardBody>
-                <InputGroup className={classnames({ "input-group-focus": state.emailFocus })}>
+                <InputGroup className={classnames({ "input-group-focus": state.emailFocus, "has-danger": state.errors.username })}>
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
                       <i className="tim-icons icon-email-85" />
@@ -67,13 +94,15 @@ const Login = () => {
                   <Input
                     placeholder="Email"
                     type="text"
-                    value={state.email}
-                    onChange={(e) => setState({ ...state, email: e.target.value })}
+                    value={state.username}
+                    onChange={(e) => setState({ ...state, username: e.target.value })}
                     onFocus={() => setState({ ...state, emailFocus: true })}
                     onBlur={() => setState({ ...state, emailFocus: false })}
                   />
                 </InputGroup>
-                <InputGroup className={classnames({ "input-group-focus": state.passFocus })}>
+                {state.errors.username && <div style={{ color: 'red', fontSize: '12px' }}>{state.errors.username}</div>}
+
+                <InputGroup className={classnames({ "input-group-focus": state.passFocus, "has-danger": state.errors.password })}>
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
                       <i className="tim-icons icon-lock-circle" />
@@ -88,6 +117,7 @@ const Login = () => {
                     onBlur={() => setState({ ...state, passFocus: false })}
                   />
                 </InputGroup>
+                {state.errors.password && <div style={{ color: 'red', fontSize: '12px' }}>{state.errors.password}</div>}
               </CardBody>
               <CardFooter>
                 <Button block className="mb-3" color="primary" size="lg" type="submit" disabled={state.loading}>
