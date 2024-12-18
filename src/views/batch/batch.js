@@ -15,7 +15,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
 import { AiOutlineCloudUpload } from "react-icons/ai";
-import "./batch.scss"; // Assuming you have a CSS file for additional styles
+import "./batch.scss";
 import { getBatchList, getProviderList, postDocumentUpload } from "services/document";
 import { DateTimeFormatter } from "components/Shared/DateTimeFormatter";
 
