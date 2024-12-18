@@ -1,9 +1,10 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from "reactstrap";
 import { AddCaptureFeedback } from "services/document";
 import NotificationAlert from "react-notification-alert";
 
-const FeedbackModal = ({ isOpen, onClose, batchId }) => {
+const FeedbackModal = ({ isOpen, onClose, selectedDetail}) => {
+  const {batchId, documentId} = selectedDetail
   const [feedback, setFeedback] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const notificationAlertRef = useRef(null);
@@ -11,6 +12,10 @@ const FeedbackModal = ({ isOpen, onClose, batchId }) => {
   const handleInputChange = (e) => {
     setFeedback(e.target.value);
   };
+
+  useEffect(() => {
+    setFeedback(selectedDetail.feedback);
+  }, [selectedDetail.feedback]);
 
   const handleSubmitFeedback = async () => {
     setIsLoading(true);
@@ -20,8 +25,8 @@ const FeedbackModal = ({ isOpen, onClose, batchId }) => {
         return;
       }
       
-      const response = await AddCaptureFeedback(batchId, feedback);      
-      onClose(false);
+      const response = await AddCaptureFeedback(batchId, documentId, feedback);      
+      onClose(true, feedback);
       notify("Feedback submitted successfully!", "success");
     } catch (error) {
       console.error("Error submitting feedback:", error.message);
@@ -44,8 +49,8 @@ const FeedbackModal = ({ isOpen, onClose, batchId }) => {
   return (
     <>
       <NotificationAlert ref={notificationAlertRef} />
-      <Modal isOpen={isOpen} toggle={onClose}>
-        <ModalHeader toggle={onClose}>Feedback</ModalHeader>
+      <Modal isOpen={isOpen} toggle={()=>onClose(false)}>
+        <ModalHeader >Feedback</ModalHeader>
         <ModalBody>
          
           <textarea
@@ -65,7 +70,7 @@ const FeedbackModal = ({ isOpen, onClose, batchId }) => {
           />
         </ModalBody>
         <ModalFooter>
-          <Button color="secondary" onClick={onClose} disabled={isLoading}>
+          <Button color="secondary" onClick={()=>onClose(false)} disabled={isLoading}>
             Close
           </Button>
           <Button color="primary" onClick={handleSubmitFeedback} disabled={isLoading}>

@@ -123,7 +123,16 @@ const Batch = () => {
       .filter((doc) => !doc.is_patient_split)
       .map((doc) => doc.name) 
       .join(", "); 
-  };  
+  }; 
+  
+  const getFeedback = (documents) => {
+    if (!documents || documents.length === 0) return "";
+  
+    return documents
+      .filter((doc) => doc.feedback)
+      .map((doc) => doc.feedback) 
+      .join(", "); 
+  }; 
 
   const notify = (message, type) => {
     const options = {
@@ -258,7 +267,7 @@ const Batch = () => {
                         <td>{x.status}</td>
                         <td>{getProviderName(x.provider_id)}</td>
                         <td>{getDocumentNames(x.documents)}</td>
-                        <td>{x.feedback}</td>
+                        <td style={{ maxWidth: "500px", whiteSpace: "normal", wordWrap: "break-word" }}>{getFeedback(x.documents)}</td>
                         <td>{DateTimeFormatter(x.created_date)}</td>
                         <td>
                           <Button

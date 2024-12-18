@@ -117,12 +117,18 @@ const BatchDetail = () => {
   const fullScreenPluginInstance = fullScreenPlugin();
   const zoomPluginInstance = zoomPlugin();
 
-  const openModal = (id) => {
-    setSelectedDetail(data.id);
+  const openModal = (detail) => {    
+    setSelectedDetail(detail);
     setIsModalOpen(true);
   };
 
-  const closeModal = () => {
+  const closeModal = (status, feedback) => {
+    if(status){
+      const _selectedDocument ={...selectedDocument, feedback};
+      setSelectedDocument(_selectedDocument);    
+      fetchData(id);
+    }
+    
     setSelectedDetail(null);
     setIsModalOpen(false);
   };
@@ -159,8 +165,11 @@ const BatchDetail = () => {
         }
       }
     }
-    fetchDocumentData();
-  }, [data]);
+    if(!selectedDocument){
+      fetchDocumentData();
+    }
+    
+  }, [data, selectedDocument]);
 
   const reExcecuteDocument = (categoryId) => {
     let request = {
@@ -319,7 +328,7 @@ const BatchDetail = () => {
                               >
                                 Re-Excecute
                               </Button> */}
-                              <Button size="sm" color="primary" onClick={() => openModal(data.id)}>
+                              <Button size="sm" color="primary" onClick={() => openModal({batchId:data.id, documentId:selectedDocument.id,feedback:selectedDocument.feedback})}>
                                 Capture Feedback
                               </Button>
                             </NavItem>
@@ -443,11 +452,11 @@ const BatchDetail = () => {
                 </Col>
               </Row>
             )}
-            {isModalOpen && (
+            {isModalOpen && selectedDetail && (
               <FeedbackModal
                 isOpen={isModalOpen}
-                onClose={closeModal}
-                batchId={data.id}
+                onClose={closeModal}               
+                selectedDetail={selectedDetail}
               />
             )}
           </Col>

@@ -60,9 +60,9 @@ export const getProviderList = () => {
     });
 }
 
-export const AddCaptureFeedback = (batchId, feedback) => {
+export const AddCaptureFeedback = (batchId, documentId, feedback) => {
     return new Promise((resolve, reject) => {
-        post(process.env.REACT_APP_API_BASE_URL, `batch/feedback?batchId=${batchId}&feedback=${feedback}`)
+        post(process.env.REACT_APP_API_BASE_URL, `batch/${batchId}/document/${documentId}/feedback`,{feedback})
             .then((response) => {
                 return resolve({ success: true, receiveObj: response.data })
             })
