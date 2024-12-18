@@ -1,38 +1,12 @@
 import React, { useState } from "react";
 import classnames from "classnames";
-import { Button, Card, CardHeader, CardBody, CardFooter, CardTitle, Form, Input, InputGroupAddon, InputGroupText, InputGroup, Container, Col, Breadcrumb, BreadcrumbItem } from "reactstrap";
-import { login } from "../../layouts/Auth/Auth";
-
-const Login = () => {
-  const [state, setState] = useState({
-    username: "",
-    password: "",
-    emailFocus: false,
-    passFocus: false,
-    loading: false,
-    clientid:"",
-    clientsecret:""
-
-  });
-
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    const { email, password } = state;
-
-    if (!email || !password) {
-      alert("Please fill in all fields.");
-      return;
-    }
-
-    setState({ ...state, loading: true });
-
-*/
-import React, { useState } from "react";
-import classnames from "classnames";
 import { Button, Card, CardHeader, CardBody, CardFooter, CardTitle, Form, Input, InputGroupAddon, InputGroupText, InputGroup, Container, Col } from "reactstrap";
 import { login } from "../../layouts/Auth/Auth";
+import { useNavigate } from "react-router-dom";
+import { userLogin } from "services/auth";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     username: "",
     password: "",
@@ -55,21 +29,20 @@ const Login = () => {
     try {
       
       const payload = { username: email, password};
-      const response = await login(payload); 
-      console.log('response8888', response)
+      const response = await userLogin(payload); 
+      //console.log('response8888', response)
 
-      if (response.success) {
-
-     const token = JSON.stringify(response.token);
+      if (response.receiveObj) {
+        const token = JSON.stringify( response.receiveObj.token);
         localStorage.setItem("token", token); 
-        window.location.href = "/admin/batch"; 
+        navigate("/admin/batch"); 
         
       } else {
         alert(response.message || "Invalid credentials. Please try again.");
       }
     } catch (error) {
       console.error(error);
-      alert("An error occurred while logging in. Please try again.");
+      alert("Invalid credentials. Please try again.");
     } finally {
       setState({ ...state, loading: false });
     }

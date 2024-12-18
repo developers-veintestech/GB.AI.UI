@@ -1,7 +1,5 @@
 import axios from 'axios';
-import { loaderService } from '../services/loader/loader';
-import * as storage from '../services/utility/storage';
-import history from '../router/customRouter'
+import { getLocalStorage } from './utility/storage';
 
 
 let requestCount = 0;
@@ -23,24 +21,27 @@ const errorHandler = (error) => {
       requestCount--;
       // If it was last ongoing request, broadcast event
       if (!requestCount) {
-        loaderService.hide();
+        //loaderService.hide();
       }
     }
 
   }
 
   if (error.response && [404].indexOf(error.response.status) !== -1) {
-    history.push({ pathname: '/not-found' });
+    //history.push({ pathname: '/not-found' });
   }
 
- 
+  if (error.response && [401].indexOf(error.response.status) !== -1) {    
+  }
+
   onError(error);
   return Promise.reject(error)
 }
 
 const successHandler = (response) => {
   if (isHandlerEnabled(response.config)) {
-   
+    // Handle responses
+
   }
 
   if (isSkipLoader(response.config)) {
@@ -52,9 +53,9 @@ const successHandler = (response) => {
   }
 
   requestCount--;
- 
+  // If it was last ongoing request, broadcast event
   if (!requestCount) {
-    loaderService.hide();
+    //loaderService.hide();
   }
 
   return response;
@@ -74,12 +75,25 @@ const isHandlerEnabledAlert = (config = {}) => {
   return config.hasOwnProperty('handlerEnabledAlert') && !config.handlerEnabledAlert ?
     false : true
 }
-debugger
+
+/**
+ * The request handler of intercepter
+ * @param {object} request The axios request.
+ */
 const requestHandler = (request) => {
-  const token = storage.getLocalStorage('token')
+  const token = getLocalStorage('token')
   if (token) {
     request.headers['Authorization'] = `bearer ${token}`;
   }
+  // if (isHandlerEnabled(request)) {
+  //   // Modify request here
+  //   // const token = authService.token;
+  //   const token = storage.getLocalStorage(AppConstant.TOKEN)
+  //   if (token) {
+  //     request.headers['Authorization'] = `Bearer ${token.token}`;
+
+  //   }
+  // }
 
   if (isSkipLoader(request)) {
     return request
@@ -87,7 +101,7 @@ const requestHandler = (request) => {
 
 
   if (!requestCount) {
-    loaderService.show();
+    //loaderService.show();
   }
   requestCount++;
   return request
@@ -97,6 +111,11 @@ const requestError = (error) => {
   return Promise.reject(error);
 }
 
+
+/**
+ * Notifiy the error while request failed.
+ * @param {object} error 
+ */
 const onError = (error) => {
   if (!isHandlerEnabledAlert(error.config)) {
     return
@@ -110,7 +129,10 @@ const onError = (error) => {
   if (!message) {
     message = error;
   }
-  
+  if (error.response.status === 401) {
+    
+  }
+
 }
 
 axios.interceptors.request.use(

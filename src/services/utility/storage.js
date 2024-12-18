@@ -58,3 +58,10 @@ export const removeSessionStorage = (key) => {
   sessionStorage.removeItem(key);
 };
 
+export const clearLocalStorage = (key) => {
+  if (key) {
+    localStorage.removeItem(key);
+  } else {
+    localStorage.clear();  // Clears all data from localStorage
+  }
+};

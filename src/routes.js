@@ -67,7 +67,7 @@ const routes = [
     rtlMini: "هعذا",
     component: <Login />,
     layout: "/auth",
-  }
+  },
 
   // {
   //   collapse: true,

@@ -1,22 +1,11 @@
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import * as storage from '../../src/services/utility/storage';
 
-const PrivateRoute = ({ children }) => {
+const PrivateRoute = () => {
   const token = storage.getLocalStorage('token');
-  if (!token) {
-    return <Navigate to="auth/login" />;
-    
-  }
 
-  return (
-    <>
-     
-      {children} 
-     
-    </>
-  );
+  return token ? <Outlet /> : <Navigate to="/auth/login" replace />;
 };
 
 export default PrivateRoute;
-
