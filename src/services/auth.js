@@ -2,7 +2,7 @@ import { get, post } from "./apiUtil";
 
 export const userLogin = (payload) => {
     return new Promise((resolve, reject) => {
-        post(process.env.REACT_APP_API_BASE_URL, `admin/user/login`, payload)
+        post(process.env.REACT_APP_API_BASE_URL, `admin/user/token`, payload)
             .then((response) => {
                 return resolve({ success: true, receiveObj: response.data });
             })
