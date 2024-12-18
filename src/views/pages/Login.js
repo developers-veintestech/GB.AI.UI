@@ -12,15 +12,32 @@ const Login = () => {
     password: "",
     emailFocus: false,
     passFocus: false,
-    loading: false
+    loading: false,
+    errors: {}
   });
+
+  const validateForm = () => {
+    const errors = {};
+    const { username, password } = state;
+    // Validate that the email is not blank
+    if (!username) {
+      errors.username = "Email is required.";
+    }
+
+    // Validate that the password is not blank
+    if (!password) {
+      errors.password = "Password is required.";
+    }
+
+    setState({ ...state, errors });
+    return Object.keys(errors).length === 0;
+  };
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    const { email, password } = state;
+    const { username, password } = state;
 
-    if (!email || !password) {
-      alert("Please fill in all fields.");
+    if (!validateForm()) {      
       return;
     }
 
@@ -28,7 +45,7 @@ const Login = () => {
 
     try {
       
-      const payload = { username: email, password};
+      const payload = { username, password};
       const response = await userLogin(payload); 
       //console.log('response8888', response)
 
@@ -57,8 +74,8 @@ const Login = () => {
               <CardHeader>                
                 <CardTitle className="text-center" tag="h1">Log in</CardTitle>             
               </CardHeader>
-              <CardBody>
-                <InputGroup className={classnames({ "input-group-focus": state.emailFocus })}>
+              <CardBody>                
+                <InputGroup className={classnames({ "input-group-focus": state.emailFocus, "has-danger": state.errors.username })}>
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
                       <i className="tim-icons icon-email-85" />
@@ -67,13 +84,15 @@ const Login = () => {
                   <Input
                     placeholder="Email"
                     type="text"
-                    value={state.email}
-                    onChange={(e) => setState({ ...state, email: e.target.value })}
+                    value={state.username}
+                    onChange={(e) => setState({ ...state, username: e.target.value })}
                     onFocus={() => setState({ ...state, emailFocus: true })}
                     onBlur={() => setState({ ...state, emailFocus: false })}
                   />
                 </InputGroup>
-                <InputGroup className={classnames({ "input-group-focus": state.passFocus })}>
+                {state.errors.username && <div style={{ color: 'red', fontSize: '12px' }}>{state.errors.username}</div>}
+
+                <InputGroup className={classnames({ "input-group-focus": state.passFocus, "has-danger": state.errors.password })}>
                   <InputGroupAddon addonType="prepend">
                     <InputGroupText>
                       <i className="tim-icons icon-lock-circle" />
@@ -88,6 +107,7 @@ const Login = () => {
                     onBlur={() => setState({ ...state, passFocus: false })}
                   />
                 </InputGroup>
+                {state.errors.password && <div style={{ color: 'red', fontSize: '12px' }}>{state.errors.password}</div>}
               </CardBody>
               <CardFooter>
                 <Button block className="mb-3" color="primary" size="lg" type="submit" disabled={state.loading}>
