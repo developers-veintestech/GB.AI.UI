@@ -1,12 +1,15 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import classnames from "classnames";
 import { Button, Card, CardHeader, CardBody, CardFooter, CardTitle, Form, Input, InputGroupAddon, InputGroupText, InputGroup, Container, Col } from "reactstrap";
 import { login } from "../../layouts/Auth/Auth";
 import { useNavigate } from "react-router-dom";
 import { userLogin } from "services/auth";
+import NotificationService from "components/Shared/NotificationService";
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
   const navigate = useNavigate();
+  const notificationRef = useRef(); 
   const [state, setState] = useState({
     username: "",
     password: "",
@@ -52,14 +55,16 @@ const Login = () => {
       if (response.receiveObj) {
         const token = JSON.stringify( response.receiveObj.token);
         localStorage.setItem("token", token); 
+        const decodedToken = jwtDecode(response.receiveObj.token);
+        localStorage.setItem("userDetails", JSON.stringify(decodedToken)); 
         navigate("/admin/batch"); 
         
-      } else {
-        alert(response.message || "Invalid credentials. Please try again.");
+      }  else {
+        notificationRef.current.notify(response.message || "Invalid credentials. Please try again.", "danger");
       }
-    } catch (error) {
+    }  catch (error) {
       console.error(error);
-      alert("Invalid credentials. Please try again.");
+      notificationRef.current.notify("Invalid credentials. Please try again.", "danger");
     } finally {
       setState({ ...state, loading: false });
     }
@@ -118,6 +123,7 @@ const Login = () => {
           </Form>
         </Col>
       </Container>
+      <NotificationService ref={notificationRef} />
     </div>
   );
 };

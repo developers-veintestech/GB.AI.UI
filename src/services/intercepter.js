@@ -9,6 +9,7 @@ export default axios.create({
 });
 
 const errorHandler = (error) => {
+   
   if (isHandlerEnabled(error.config)) {
     // Handle errors
   }
@@ -31,7 +32,9 @@ const errorHandler = (error) => {
     //history.push({ pathname: '/not-found' });
   }
 
-  if (error.response && [401].indexOf(error.response.status) !== -1) {    
+  if (error.response && [401].indexOf(error.response.status) !== -1) { 
+    window.location.href = '/auth/login';   
+    
   }
 
   onError(error);

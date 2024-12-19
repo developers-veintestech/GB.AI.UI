@@ -44,6 +44,8 @@ const AdminNavbar = (props) => {
   const [collapseOpen, setCollapseOpen] = React.useState(false);
   const [modalSearch, setModalSearch] = React.useState(false);
   const [color, setColor] = React.useState("navbar-transparent");
+
+  const userDetails = JSON.parse(localStorage.getItem("userDetails"));
   React.useEffect(() => {
     window.addEventListener("resize", updateColor);
     return function cleanup() {
@@ -75,6 +77,7 @@ const AdminNavbar = (props) => {
   const handleLogout = () => {
     // Clear the token from storage
     clearLocalStorage('token');
+    clearLocalStorage('userDetails');
 
     // Redirect to login page
     navigate('/auth/login', { replace: true });
@@ -141,7 +144,7 @@ const AdminNavbar = (props) => {
             <span className="navbar-toggler-bar navbar-kebab" />
           </button>
           <Collapse navbar isOpen={collapseOpen}>
-            <Nav className="ml-auto" navbar>              
+            <Nav className="ml-auto" navbar>
               <UncontrolledDropdown nav>
                 <DropdownToggle
                   caret
@@ -150,11 +153,15 @@ const AdminNavbar = (props) => {
                   nav
                   onClick={(e) => e.preventDefault()}
                 >
-                  <div className="photo">
-                    <img alt="..." src={require("assets/img/mike.jpg")} />
+                  <div className="d-flex align-items-center">
+                    {userDetails && <span className="mr-2">{userDetails.Name}</span>}
+                    <div className="photo">
+                      <img alt="..." src={require("assets/img/mike.jpg")} />
+                    </div>
+                    <b className="caret d-none d-lg-block d-xl-block ml-2" />
                   </div>
-                  <b className="caret d-none d-lg-block d-xl-block" />
                   <p className="d-lg-none">Log out</p>
+
                 </DropdownToggle>
                 <DropdownMenu className="dropdown-navbar" right tag="ul">
                   {/* <NavLink tag="li">

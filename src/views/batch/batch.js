@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NotificationAlert from "react-notification-alert";
+import NotificationService from "components/Shared/NotificationService";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import "./batch.scss";
 import { getBatchList, getProviderList, postDocumentUpload } from "services/document";
@@ -25,7 +26,8 @@ const Batch = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState("");
   const [providers, setProviders] = useState([]);
-  const notificationAlertRef = useRef(null);
+  // const notificationAlertRef = useRef(null);
+  const notificationRef = useRef(null);
   const navigate = useNavigate();
 
   const fetchData = async () => {
@@ -74,14 +76,15 @@ const Batch = () => {
     setSelectedProvider(e.target.value);
   };
 
+  
   const handleUpload = async () => {
     if (selectedProvider === "") {
-      notify("Please select a provider.", "danger");
+      notificationRef.current.notify("Please select a provider.", "danger");
       return;
     }
 
     if (files.length === 0) {
-      alert("Please select files to upload.");
+      notificationRef.current.notify("Please select files to upload.", "danger");
       return;
     }
 
@@ -97,7 +100,7 @@ const Batch = () => {
 
       const newBatchId = response.receiveObj;
       fetchData();
-      notify("Files uploaded successfully!", "success");
+      notificationRef.current.notify("Files uploaded successfully!", "success");
 
       setFiles([]);
       setIsLoading(false);
@@ -105,7 +108,7 @@ const Batch = () => {
       navigate(`/admin/batch-detail/${newBatchId}`);
     } catch (error) {
       console.error("Upload failed:", error);
-      notify("Upload failed! Please try again.", "danger");
+      notificationRef.current.notify("Upload failed! Please try again.", "danger");
     } finally {
       setIsLoading(false);
     }
@@ -134,19 +137,19 @@ const Batch = () => {
       .join(", "); 
   }; 
 
-  const notify = (message, type) => {
-    const options = {
-      place: "tr",
-      message: <div>{message}</div>,
-      type: type,
-      autoDismiss: 7,
-    };
-    notificationAlertRef.current.notificationAlert(options);
-  };
+  // const notify = (message, type) => {
+  //   const options = {
+  //     place: "tr",
+  //     message: <div>{message}</div>,
+  //     type: type,
+  //     autoDismiss: 7,
+  //   };
+  //   notificationAlertRef.current.notificationAlert(options);
+  // };
 
   return (
     <>
-      <NotificationAlert ref={notificationAlertRef} />
+      <NotificationService ref={notificationRef} />
       <div className="content">
         {/* Drag-and-Drop Upload Card */}
         <Row>
