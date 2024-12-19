@@ -6,25 +6,27 @@ import NotificationAlert from "react-notification-alert";
 const FeedbackModal = ({ isOpen, onClose, selectedDetail}) => {
   const {batchId, documentId} = selectedDetail
   const [feedback, setFeedback] = useState("");
+  const [feedbackError, setFeedbackError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const notificationAlertRef = useRef(null);
 
   const handleInputChange = (e) => {
     setFeedback(e.target.value);
+    setFeedbackError(""); 
   };
 
   useEffect(() => {
-    setFeedback(selectedDetail.feedback);
+    setFeedback(selectedDetail.feedback || "");
   }, [selectedDetail.feedback]);
 
   const handleSubmitFeedback = async () => {
+    if (!feedback.trim()) {
+      setFeedbackError("Feedback is required.");
+      return;
+    }
+    
     setIsLoading(true);
     try {
-      if(!feedback){
-        alert("Please enter feedback.")
-        return;
-      }
-      
       const response = await AddCaptureFeedback(batchId, documentId, feedback);      
       onClose(true, feedback);
       notify("Feedback submitted successfully!", "success");
@@ -59,7 +61,7 @@ const FeedbackModal = ({ isOpen, onClose, selectedDetail}) => {
             style={{
               width: "100%",
               padding: "8px",
-              border: "1px solid #ccc",
+              border: feedbackError ? "1px solid red" : "1px solid #ccc",
               borderRadius: "4px",
               resize: "vertical",
               lineHeight: "0.9",
@@ -68,6 +70,11 @@ const FeedbackModal = ({ isOpen, onClose, selectedDetail}) => {
             onChange={handleInputChange}
             placeholder="Type your feedback here..."
           />
+          {feedbackError && (
+            <div style={{ color: "red", fontSize: "12px", marginTop: "5px" }}>
+              {feedbackError}
+            </div>
+          )}
         </ModalBody>
         <ModalFooter>
           <Button color="secondary" onClick={()=>onClose(false)} disabled={isLoading}>
