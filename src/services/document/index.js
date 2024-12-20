@@ -71,3 +71,15 @@ export const AddCaptureFeedback = (batchId, documentId, feedback) => {
             });
     });
 }
+
+export const getBatchDocumentUrls = (batchId, documentId) => {
+    return new Promise((resolve, reject) => {
+        get(process.env.REACT_APP_API_BASE_URL, `batch/${batchId}/document/${documentId}/download/urls`)
+            .then((response) => {
+                return resolve({ success: true, receiveObj: response.data })
+            })
+            .catch((error) => {
+                return reject({ success: false, receiveObj: error })
+            });
+    });
+}

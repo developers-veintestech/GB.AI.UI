@@ -33,7 +33,7 @@ const errorHandler = (error) => {
   }
 
   if (error.response && [401].indexOf(error.response.status) !== -1) { 
-    window.location.href = '/auth/login';   
+    // window.location.href = '/auth/login';   
     
   }
 

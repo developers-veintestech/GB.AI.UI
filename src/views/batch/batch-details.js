@@ -27,7 +27,7 @@ import { thumbnailPlugin } from "@react-pdf-viewer/thumbnail";
 import { fullScreenPlugin } from "@react-pdf-viewer/full-screen";
 import { zoomPlugin } from "@react-pdf-viewer/zoom";
 import "@react-pdf-viewer/core/lib/styles/index.css";
-import { getBatchDetail } from "services/document";
+import { getBatchDetail, getBatchDocumentUrls } from "services/document";
 import "./batch.scss";
 
 // Plugins
@@ -41,6 +41,7 @@ import SortingTable from "components/SortingTable/SortingTable";
 import MemoizedViewer from "./pdf-viewer";
 import { reExcecuteDocumentCategory } from "services/document";
 import FeedbackModal from "./feedbackModal";
+import { PDFDocument } from 'pdf-lib';
 
 const BatchDetail = () => {
   const [loading, setLoading] = useState(false);
@@ -84,24 +85,76 @@ const BatchDetail = () => {
     return `${process.env.REACT_APP_API_BASE_URL}batch/${batchId}/document/${documentId}/download`;
   };
 
+  const getDocumentDownloadUrls = async(batchId, documentId) => {
+   var response = await getBatchDocumentUrls(batchId, documentId);
+   if(response.success){
+    var data = response.receiveObj;
+    if(data.fileType == "application/pdf"){
+      downloadCombinedPDF(data.fileBytes, data.fileName);
+    }
+    else{
+      downloadFile(data.fileBytes, data.fileName, data.fileType);
+    }
+   }
+  };
+
+const downloadCombinedPDF = async (byteArrays, filename) => {
+  const pdfDoc = await PDFDocument.create(); 
+  for (let base64String of byteArrays) {
+    const pdfBytes = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
+    const existingPdfDoc = await PDFDocument.load(pdfBytes); // Load the existing PDF
+    const copiedPages = await pdfDoc.copyPages(existingPdfDoc, existingPdfDoc.getPages().map((_, index) => index));
+    copiedPages.forEach((page) => pdfDoc.addPage(page));
+  }
+
+  const combinedPdfBytes = await pdfDoc.save();
+  const blob = new Blob([combinedPdfBytes], { type: 'application/pdf' });
+  const url = URL.createObjectURL(blob);
+
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename; 
+  link.click(); 
+
+  URL.revokeObjectURL(url);
+};
+
+// Example usage
+
+  const downloadFile = (byteArrays, filename, fileType) => {
+    let newByteArray = []; // Initialize an empty array
+
+    byteArrays.forEach(base64String => {
+      let byteArray = new Uint8Array(atob(base64String).split("").map(c => c.charCodeAt(0)));
+      newByteArray.push(byteArray); // Push the resulting Uint8Array into the newByteArray
+    });
+    const url = URL.createObjectURL(blob);
+    
+    const combinedByteArray = new Uint8Array(newByteArray.reduce((acc, byteArray) => {
+      return acc.concat(Array.from(byteArray));
+    }, []));
+    const blob = new Blob([combinedByteArray], { type: fileType }); // Adjust MIME type as needed
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename; // Set the filename for download
+    link.click();
+  };
+  
+
   // Fetch documents in parallel and create an object with document IDs as keys and blob URLs as values
   const fetchDocumentsInParallel = async (batchId, documentId, splitIds) => {
     try {
-      // Create an array of promises for each document
       setLoading(true);
       const fetchPromises = splitIds.map(async (splitId) => {
         const url = getSplitDocumentDownloadUrl(batchId, documentId, splitId);
         const response = await axios.get(url, { responseType: "blob" });
         const blobUrl = URL.createObjectURL(response.data);
 
-        // Return an object with document ID as the key and blob URL as the value
         return { [splitId]: blobUrl };
       });
 
-      // Wait for all promises to resolve
       const results = await Promise.all(fetchPromises);
 
-      // Combine all objects into a single object
       const blobUrlMap = Object.assign({}, ...results);
 
       return blobUrlMap;
@@ -330,6 +383,9 @@ const BatchDetail = () => {
                               </Button> */}
                               <Button size="sm" color="primary" onClick={() => openModal({batchId:data.id, documentId:selectedDocument.id,feedback:selectedDocument.feedback})}>
                                 Capture Feedback
+                              </Button>
+                              <Button size="sm" color="success" onClick={() => getDocumentDownloadUrls(data.id, selectedDocument.id)}>
+                                Download
                               </Button>
                             </NavItem>
                             }
