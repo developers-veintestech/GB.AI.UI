@@ -65,3 +65,7 @@ export const clearLocalStorage = (key) => {
     localStorage.clear();  // Clears all data from localStorage
   }
 };
+
+export const clearAllLocalStorage = () => {
+  localStorage.clear();  // Clears all data from localStorage
+};

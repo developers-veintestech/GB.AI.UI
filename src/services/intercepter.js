@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { getLocalStorage } from './utility/storage';
+import { userLogout } from './auth';
 
 
 let requestCount = 0;
@@ -33,6 +34,7 @@ const errorHandler = (error) => {
   }
 
   if (error.response && [401].indexOf(error.response.status) !== -1) { 
+    userLogout()
     window.location.href = '/auth/login';   
     
   }

@@ -1,4 +1,5 @@
 import { get, post } from "./apiUtil";
+import { clearAllLocalStorage } from "./utility/storage";
 
 export const userLogin = (payload) => {
     return new Promise((resolve, reject) => {
@@ -11,3 +12,7 @@ export const userLogin = (payload) => {
             });
     });
 };
+
+export const userLogout=()=>{
+    clearAllLocalStorage()
+}
