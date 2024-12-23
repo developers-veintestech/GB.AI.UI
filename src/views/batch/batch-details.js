@@ -85,61 +85,29 @@ const BatchDetail = () => {
     return `${process.env.REACT_APP_API_BASE_URL}batch/${batchId}/document/${documentId}/download`;
   };
 
-  const getDocumentDownloadUrls = async(batchId, documentId) => {
-   var response = await getBatchDocumentUrls(batchId, documentId);
-   if(response.success){
-    var data = response.receiveObj;
-    if(data.fileType == "application/pdf"){
-      downloadCombinedPDF(data.fileBytes, data.fileName);
+  const getDocumentDownloadUrls = async (batchId, documentId) => {
+    const fileName = `${selectedDocument.name}.`;
+    var response = await getBatchDocumentUrls(batchId, documentId);
+    if (response.success) {
+      var data = response.receiveObj;
+      downloadZipFromSasUrl(data, fileName);
     }
-    else{
-      downloadFile(data.fileBytes, data.fileName, data.fileType);
-    }
-   }
   };
 
-const downloadCombinedPDF = async (byteArrays, filename) => {
-  const pdfDoc = await PDFDocument.create(); 
-  for (let base64String of byteArrays) {
-    const pdfBytes = Uint8Array.from(atob(base64String), (c) => c.charCodeAt(0));
-    const existingPdfDoc = await PDFDocument.load(pdfBytes); // Load the existing PDF
-    const copiedPages = await pdfDoc.copyPages(existingPdfDoc, existingPdfDoc.getPages().map((_, index) => index));
-    copiedPages.forEach((page) => pdfDoc.addPage(page));
-  }
+  const downloadZipFromSasUrl = async(sasUrl, fileName) => {
+    try {
+        const anchor = document.createElement('a');
+        anchor.href = sasUrl;
+        anchor.download = fileName; // Set the file name for the download
+        document.body.appendChild(anchor);
+        anchor.click();
 
-  const combinedPdfBytes = await pdfDoc.save();
-  const blob = new Blob([combinedPdfBytes], { type: 'application/pdf' });
-  const url = URL.createObjectURL(blob);
-
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename; 
-  link.click(); 
-
-  URL.revokeObjectURL(url);
-};
-
-// Example usage
-
-  const downloadFile = (byteArrays, filename, fileType) => {
-    let newByteArray = []; // Initialize an empty array
-
-    byteArrays.forEach(base64String => {
-      let byteArray = new Uint8Array(atob(base64String).split("").map(c => c.charCodeAt(0)));
-      newByteArray.push(byteArray); // Push the resulting Uint8Array into the newByteArray
-    });
-    const url = URL.createObjectURL(blob);
-    
-    const combinedByteArray = new Uint8Array(newByteArray.reduce((acc, byteArray) => {
-      return acc.concat(Array.from(byteArray));
-    }, []));
-    const blob = new Blob([combinedByteArray], { type: fileType }); // Adjust MIME type as needed
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename; // Set the filename for download
-    link.click();
-  };
-  
+        document.body.removeChild(anchor);
+        URL.revokeObjectURL(sasUrl);
+    } catch (error) {
+        console.error('Error downloading the file:', error);
+    }
+}
 
   // Fetch documents in parallel and create an object with document IDs as keys and blob URLs as values
   const fetchDocumentsInParallel = async (batchId, documentId, splitIds) => {
