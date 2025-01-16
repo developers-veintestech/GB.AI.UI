@@ -10,6 +10,7 @@ import {
   Col,
   Input,
   Label,
+  Spinner,
 } from "reactstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -162,6 +163,14 @@ const Batch = () => {
     <>
       <NotificationService ref={notificationRef} />
       <div className="content">
+        {isLoading && (
+            <div className="loading-overlay">
+              <Spinner
+                color="primary"
+                style={{ width: "3rem", height: "3rem" }}
+              />
+            </div>
+          )}
         {/* Drag-and-Drop Upload Card */}
         <Row>
           <Col>
@@ -295,23 +304,10 @@ const Batch = () => {
                         <td>
                           <Button
                             color="danger"
-                            size="sm"
+                            style={{padding:'15px', fontSize:'13px'}}
                             onClick={() => onDeleteHandler(x.id)}
                           >
-                            {isLoading ? (
-                              <>
-                                <div className="loader">
-                                  <span
-                                    className="spinner-border spinner-border-sm"
-                                    role="status"
-                                    aria-hidden="true"
-                                  ></span>
-                                  <span>Deleting..</span>
-                                </div>
-                              </>
-                            ) : (
-                              "DELETE"
-                            )}
+                            DELETE
                           </Button>
                         </td>
                       </tr>
