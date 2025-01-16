@@ -17,7 +17,7 @@ import NotificationAlert from "react-notification-alert";
 import NotificationService from "components/Shared/NotificationService";
 import { AiOutlineCloudUpload } from "react-icons/ai";
 import "./batch.scss";
-import { getBatchList, getProviderList, postDocumentUpload } from "services/document";
+import { getBatchList, getProviderList, postDocumentUpload, deleteBatch } from "services/document";
 import { DateTimeFormatter } from "components/Shared/DateTimeFormatter";
 
 const Batch = () => {
@@ -50,6 +50,15 @@ const Batch = () => {
 
   const onViewDetailHandler = (id) => {
     navigate(`/admin/batch-detail/${id}`);
+  };
+
+  const onDeleteHandler = async (id) => {
+    try {
+      await deleteBatch(id);
+      fetchData();
+    } catch (error) {
+      console.error("Error during delete the data:", error.message);
+    }
   };
 
   useEffect(() => {
@@ -279,6 +288,15 @@ const Batch = () => {
                             onClick={() => onViewDetailHandler(x.id)}
                           >
                             View Details
+                          </Button>
+                        </td>
+                        <td>
+                          <Button
+                            color="danger"
+                            size="sm"
+                            onClick={() => onDeleteHandler(x.id)}
+                          >
+                            DELETE
                           </Button>
                         </td>
                       </tr>
