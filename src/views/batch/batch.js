@@ -53,9 +53,11 @@ const Batch = () => {
   };
 
   const onDeleteHandler = async (id) => {
+    setIsLoading(true);
     try {
       await deleteBatch(id);
       fetchData();
+      setIsLoading(false);
     } catch (error) {
       console.error("Error during delete the data:", error.message);
     }
@@ -296,7 +298,20 @@ const Batch = () => {
                             size="sm"
                             onClick={() => onDeleteHandler(x.id)}
                           >
-                            DELETE
+                            {isLoading ? (
+                              <>
+                                <div className="loader">
+                                  <span
+                                    className="spinner-border spinner-border-sm"
+                                    role="status"
+                                    aria-hidden="true"
+                                  ></span>
+                                  <span>Deleting..</span>
+                                </div>
+                              </>
+                            ) : (
+                              "DELETE"
+                            )}
                           </Button>
                         </td>
                       </tr>
