@@ -294,7 +294,7 @@ const Batch = () => {
                 <CardTitle tag="h4">Batch List</CardTitle>
               </CardHeader>
               <CardBody>
-                <Table responsive>
+                <Table bordered responsive>
                   <thead className="text-primary">
                     <tr>
                       <th className="text-center">#</th>
@@ -319,7 +319,7 @@ const Batch = () => {
                         <td>{getDocumentNames(x.documents)}</td>
                         <td style={{ maxWidth: "500px", whiteSpace: "normal", wordWrap: "break-word" }}>{getFeedback(x.documents)}</td>
                         <td>{DateTimeFormatter(x.created_date)}</td>
-                        <td>
+                        <td style={{borderRight:'hidden'}}>
                           <Button
                             color="info"
                             size="sm"
