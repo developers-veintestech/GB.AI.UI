@@ -55,12 +55,16 @@ const Batch = () => {
 
   const onDeleteHandler = async (id) => {
     setIsLoading(true);
+    let isSoftDelete = true;
     try {
-      await deleteBatch(id);
+      await deleteBatch(id, isSoftDelete);
       fetchData();
       setIsLoading(false);
     } catch (error) {
-      console.error("Error during delete the data:", error.message);
+      if (!error.success) {
+        setIsLoading(false);
+        notificationRef.current.notify(error.receiveObj, "danger");
+      }
     }
   };
 

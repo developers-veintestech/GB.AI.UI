@@ -84,14 +84,14 @@ export const getBatchDocumentUrls = (batchId, documentId) => {
     });
 }
 
-export const deleteBatch = (batchId) => {
+export const deleteBatch = (batchId, isSoftDelete) => {
     return new Promise((resolve, reject) => {
-        post(process.env.REACT_APP_API_BASE_URL, `batch/delete/${batchId}`)
+        post(process.env.REACT_APP_API_BASE_URL, `batch/delete/${batchId}/${isSoftDelete}`)
             .then((response) => {
                 return resolve({ success: true, receiveObj: response.data });
             })
             .catch((error) => {
-                return reject({ success: false, receiveObj: error });
+                return reject({ success: false, receiveObj: error.response.data });
             });
     });
 };
