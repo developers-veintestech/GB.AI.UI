@@ -27,6 +27,7 @@ const Batch = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [selectedProvider, setSelectedProvider] = useState("");
   const [providers, setProviders] = useState([]);
+  const [batchName, setBatchName] = useState("");
   // const notificationAlertRef = useRef(null);
   const notificationRef = useRef(null);
   const navigate = useNavigate();
@@ -99,6 +100,11 @@ const Batch = () => {
       return;
     }
 
+    if (!batchName.trim()) {
+      notificationRef.current.notify("Please provide a batch name.", "danger");
+      return;
+    }
+
     if (files.length === 0) {
       notificationRef.current.notify("Please select files to upload.", "danger");
       return;
@@ -106,6 +112,7 @@ const Batch = () => {
 
     const formData = new FormData();
     formData.append("providerId", selectedProvider);
+    formData.append("batchName", batchName);
     files.forEach((file) => {
       formData.append("files", file);
     });
@@ -119,6 +126,7 @@ const Batch = () => {
       notificationRef.current.notify("Files uploaded successfully!", "success");
 
       setFiles([]);
+      setBatchName("");
       setIsLoading(false);
 
       navigate(`/admin/batch-detail/${newBatchId}`);
@@ -183,7 +191,20 @@ const Batch = () => {
                 <CardTitle tag="h4">Batch Upload</CardTitle>
               </CardHeader>
               <CardBody>
-                <Row>
+              <Row>
+                <Col md={3} className="ml-2">
+                    <Label for="batchNameInput" className="font-weight-bold">
+                      Batch Name
+                    </Label>
+                    <Input
+                      type="text"
+                      id="batchNameInput"
+                      placeholder="Enter batch name"
+                      value={batchName}
+                      onChange={(e) => setBatchName(e.target.value)}
+                    />
+                  </Col>
+                  
                   <Col md={3} className="ml-2">
                     <label for="providerSelect" className="font-weight-bold">Provider</label>
                     <Input
@@ -278,6 +299,7 @@ const Batch = () => {
                     <tr>
                       <th className="text-center">#</th>
                       <th>Batch Id</th>
+                      <th>Batch Name</th>
                       <th>Status</th>
                       <th>Provider</th>
                       <th>File Name</th>
@@ -291,6 +313,7 @@ const Batch = () => {
                       <tr key={x.id}>
                         <td className="text-center">{i + 1}</td>
                         <td>{x.id}</td>
+                        <td>{x.batchName}</td>
                         <td>{x.status}</td>
                         <td>{getProviderName(x.provider_id)}</td>
                         <td>{getDocumentNames(x.documents)}</td>
